@@ -1,0 +1,120 @@
+export type Role = "admin" | "lecturer" | "student"
+
+export type User = {
+  id: string
+  name: string
+  identifier: string // email / staff id / matric number
+  role: Role
+}
+
+export type Student = {
+  id: string
+  matric: string
+  name: string
+  level: string
+  department: string
+  faceRegistered: boolean
+  fingerprintRegistered: boolean
+}
+
+export type Course = {
+  id: string
+  code: string
+  title: string
+  level: string
+  semester: string
+  lecturer: string
+  studentIds: string[]
+}
+
+export type AttendanceRecord = {
+  id: string
+  date: string
+  status: "present" | "absent"
+}
+
+export type Session = {
+  id: string
+  courseId: string
+  date: string
+  startTime: string
+  endTime: string
+  venue: string
+  present: number
+  active: boolean
+}
+
+export const DEMO_ACCOUNTS: { label: string; identifier: string; password: string; role: Role }[] = [
+  { label: "Administrator", identifier: "admin@futminna.edu.ng", password: "password", role: "admin" },
+  { label: "Lecturer", identifier: "d.maliki@futminna.edu.ng", password: "password", role: "lecturer" },
+  { label: "Student", identifier: "2021/1/81940CP", password: "password", role: "student" },
+]
+
+export const students: Student[] = [
+  { id: "s1", matric: "2021/1/81940CP", name: "Sulyman Muhammad Sodiq", level: "100", department: "Computer Engineering", faceRegistered: true, fingerprintRegistered: true },
+  { id: "s2", matric: "2021/1/81941CP", name: "Victor Okonkwo", level: "100", department: "Computer Engineering", faceRegistered: true, fingerprintRegistered: false },
+  { id: "s3", matric: "2021/1/81942CP", name: "Musa Ibrahim", level: "100", department: "Computer Engineering", faceRegistered: true, fingerprintRegistered: true },
+  { id: "s4", matric: "2021/1/81943CP", name: "Ibrahim Bello", level: "200", department: "Computer Engineering", faceRegistered: false, fingerprintRegistered: true },
+  { id: "s5", matric: "2021/1/81944CP", name: "Aisha Lawal", level: "200", department: "Computer Engineering", faceRegistered: true, fingerprintRegistered: true },
+  { id: "s6", matric: "2021/1/81945CP", name: "Chidinma Eze", level: "300", department: "Computer Engineering", faceRegistered: true, fingerprintRegistered: true },
+  { id: "s7", matric: "2021/1/81946CP", name: "Daniel Adeyemi", level: "300", department: "Computer Engineering", faceRegistered: false, fingerprintRegistered: false },
+  { id: "s8", matric: "2021/1/81947CP", name: "Fatima Yusuf", level: "100", department: "Computer Engineering", faceRegistered: true, fingerprintRegistered: true },
+]
+
+export const courses: Course[] = [
+  { id: "c1", code: "CPE121", title: "Introduction to Computer Engineering", level: "100", semester: "First Semester", lecturer: "Dr. D. Maliki", studentIds: ["s1", "s2", "s3", "s8"] },
+  { id: "c2", code: "CPE122", title: "Digital Logic Design", level: "100", semester: "First Semester", lecturer: "Dr. D. Maliki", studentIds: ["s1", "s3", "s8"] },
+  { id: "c3", code: "CPE123", title: "Programming Fundamentals", level: "100", semester: "Second Semester", lecturer: "Engr. A. Bala", studentIds: ["s1", "s2", "s8"] },
+  { id: "c4", code: "CPE221", title: "Circuit Theory", level: "200", semester: "First Semester", lecturer: "Dr. D. Maliki", studentIds: ["s4", "s5"] },
+  { id: "c5", code: "CPE311", title: "Microprocessors", level: "300", semester: "First Semester", lecturer: "Prof. K. Usman", studentIds: ["s6", "s7"] },
+]
+
+export const sessions: Session[] = [
+  { id: "se1", courseId: "c1", date: "20/06/2026", startTime: "9:00 AM", endTime: "11:00 AM", venue: "ETF Lecture Hall", present: 0, active: true },
+  { id: "se2", courseId: "c2", date: "20/06/2026", startTime: "12:00 PM", endTime: "2:00 PM", venue: "SEET Hall A", present: 28, active: false },
+  { id: "se3", courseId: "c4", date: "19/06/2026", startTime: "8:00 AM", endTime: "10:00 AM", venue: "ETF Lecture Hall", present: 41, active: false },
+]
+
+export const studentAttendanceHistory: AttendanceRecord[] = [
+  { id: "a1", date: "12 June 2026", status: "present" },
+  { id: "a2", date: "15 June 2026", status: "present" },
+  { id: "a3", date: "17 June 2026", status: "absent" },
+  { id: "a4", date: "19 June 2026", status: "present" },
+  { id: "a5", date: "20 June 2026", status: "present" },
+]
+
+// Admin analytics
+export const attendanceByLevel = [
+  { level: "100 Level", percentage: 89 },
+  { level: "200 Level", percentage: 85 },
+  { level: "300 Level", percentage: 78 },
+]
+
+export const attendanceByCourse = [
+  { course: "CPE121", percentage: 92 },
+  { course: "CPE122", percentage: 86 },
+  { course: "CPE123", percentage: 80 },
+  { course: "CPE221", percentage: 88 },
+  { course: "CPE311", percentage: 74 },
+]
+
+export const weeklyAttendance = [
+  { week: "Wk 1", percentage: 82 },
+  { week: "Wk 2", percentage: 86 },
+  { week: "Wk 3", percentage: 79 },
+  { week: "Wk 4", percentage: 90 },
+  { week: "Wk 5", percentage: 88 },
+  { week: "Wk 6", percentage: 84 },
+]
+
+export function getCourseById(id: string) {
+  return courses.find((c) => c.id === id)
+}
+
+export function getStudentById(id: string) {
+  return students.find((s) => s.id === id)
+}
+
+export function getStudentByMatric(matric: string) {
+  return students.find((s) => s.matric.toLowerCase() === matric.toLowerCase())
+}
