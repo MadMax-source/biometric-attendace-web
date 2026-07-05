@@ -1,215 +1,348 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Camera, Check, Fingerprint, Loader2, ScanFace } from "lucide-react"
-import { toast } from "sonner"
-import { PageHeader } from "@/components/widgets"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { cn } from "@/lib/utils"
+} from "@/components/ui/select";
 
-const FACE_ANGLES = ["Front", "Left", "Right"] as const
+type RegistrationMode = "student" | "lecturer";
 
-export function RegisterStudentForm({ backHref }: { backHref: string }) {
-  const router = useRouter()
-  const [name, setName] = useState("")
-  const [matric, setMatric] = useState("")
-  const [level, setLevel] = useState("")
-  const [capturedFaces, setCapturedFaces] = useState<string[]>([])
-  const [capturingAngle, setCapturingAngle] = useState<string | null>(null)
-  const [fingerScans, setFingerScans] = useState(0)
-  const [scanning, setScanning] = useState(false)
-  const [saving, setSaving] = useState(false)
+const DEPARTMENTS = [
+  "Computer Engineering",
+  "Electrical Engineering",
+  "Mechanical Engineering",
+  "Civil Engineering",
+  "Mechatronics Engineering",
+];
 
-  const faceDone = capturedFaces.length === FACE_ANGLES.length
-  const fingerDone = fingerScans >= 2
+export function RegisterStudentForm({
+  backHref,
+  defaultMode = "student",
+}: {
+  backHref: string;
+  defaultMode?: RegistrationMode;
+}) {
+  const router = useRouter();
+  const [mode, setMode] = useState<RegistrationMode>(defaultMode);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [identifier, setIdentifier] = useState("");
+  const [email, setEmail] = useState("");
+  const [department, setDepartment] = useState("Computer Engineering");
+  const [level, setLevel] = useState("100");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [saving, setSaving] = useState(false);
 
-  function captureFace(angle: string) {
-    if (capturedFaces.includes(angle)) return
-    setCapturingAngle(angle)
-    setTimeout(() => {
-      setCapturedFaces((prev) => [...prev, angle])
-      setCapturingAngle(null)
-      toast.success(`${angle} face captured`)
-    }, 1200)
-  }
-
-  function scanFinger() {
-    if (fingerDone) return
-    setScanning(true)
-    setTimeout(() => {
-      setFingerScans((n) => n + 1)
-      setScanning(false)
-      toast.success(`Fingerprint scan ${fingerScans + 1} of 2 recorded`)
-    }, 1200)
-  }
+  const title =
+    mode === "student" ? "Student Registration" : "Lecturer Registration";
+  const identifierLabel = mode === "student" ? "Matric No." : "Staff ID";
+  const emailLabel = mode === "student" ? "Student Email" : "Email";
 
   function handleSave(e: React.FormEvent) {
-    e.preventDefault()
-    if (!name || !matric || !level) {
-      toast.error("Fill in all student details")
-      return
+    e.preventDefault();
+
+    if (
+      !firstName ||
+      !lastName ||
+      !identifier ||
+      !email ||
+      !department ||
+      !password ||
+      !confirmPassword
+    ) {
+      toast.error("Fill in all required fields");
+      return;
     }
-    if (!faceDone) {
-      toast.error("Complete the face registration (3 angles)")
-      return
+
+    if (mode === "student" && !level) {
+      toast.error("Select a level");
+      return;
     }
-    if (!fingerDone) {
-      toast.error("Scan the fingerprint twice")
-      return
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
     }
-    setSaving(true)
-    setTimeout(() => {
-      toast.success("Student Registered Successfully", { description: `${name} · ${matric}` })
-      router.push(backHref)
-    }, 900)
+
+    setSaving(true);
+    window.setTimeout(() => {
+      toast.success(
+        `${mode === "student" ? "Student" : "Lecturer"} registered successfully`,
+        {
+          description: `${firstName} ${lastName} · ${identifier}`,
+        },
+      );
+      router.push(backHref);
+    }, 900);
   }
 
   return (
-    <form onSubmit={handleSave} className="space-y-6">
-      <PageHeader title="Register Student" description="Capture details and biometric templates." />
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Student details</CardTitle>
-        </CardHeader>
-        <CardContent className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="name">Student Name</Label>
-            <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Full name" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="matric">Matric Number</Label>
-            <Input
-              id="matric"
-              value={matric}
-              onChange={(e) => setMatric(e.target.value)}
-              placeholder="2021/1/00000CP"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>Department</Label>
-            <Input value="Computer Engineering" disabled />
-          </div>
-          <div className="space-y-2">
-            <Label>Level</Label>
-            <Select value={level} onValueChange={setLevel}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select level" />
-              </SelectTrigger>
-              <SelectContent>
-                {["100", "200", "300", "400", "500"].map((l) => (
-                  <SelectItem key={l} value={l}>
-                    {l} Level
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
-
-      <div className="grid gap-6 lg:grid-cols-2">
-        {/* Face */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <ScanFace className="size-4 text-primary" />
-              Face Registration
-              {faceDone && <Check className="size-4 text-primary" />}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-3 gap-3">
-              {FACE_ANGLES.map((angle) => {
-                const done = capturedFaces.includes(angle)
-                const busy = capturingAngle === angle
-                return (
-                  <div
-                    key={angle}
-                    className={cn(
-                      "flex aspect-square flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed text-xs",
-                      done ? "border-primary bg-primary/5 text-primary" : "text-muted-foreground",
-                    )}
+    <div className="bg-[#a9c8f4]">
+      <form
+        onSubmit={handleSave}
+        className="mx-auto flex min-h-[calc(100dvh-2rem)] w-full max-w-[640px] items-center justify-center px-3 py-4 sm:px-4 "
+      >
+        <Card className="w-full max-w-[520px] border border-[#d9e3f6] bg-white shadow-[0_24px_80px_rgba(15,23,42,0.12)]">
+          <CardContent className="space-y-6 p-5 sm:p-7">
+            <div className="flex flex-col items-center gap-3 pt-1">
+              <LogoMark />
+              <div className="rounded-full bg-[#f2f2f2] p-1.5">
+                <div className="grid grid-cols-2 gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => setMode("student")}
+                    className={`rounded-full px-4 py-2.5 text-[12px] font-medium transition-all sm:text-[13px] ${
+                      mode === "student"
+                        ? "bg-white text-[#2b2b2b] shadow-sm"
+                        : "text-[#6b6b6b]"
+                    }`}
                   >
-                    {busy ? (
-                      <Loader2 className="size-5 animate-spin text-primary" />
-                    ) : done ? (
-                      <Check className="size-5" />
-                    ) : (
-                      <Camera className="size-5" />
-                    )}
-                    {angle}
-                  </div>
-                )
-              })}
+                    Student
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setMode("lecturer")}
+                    className={`rounded-full px-4 py-2.5 text-[12px] font-medium transition-all sm:text-[13px] ${
+                      mode === "lecturer"
+                        ? "bg-white text-[#2b2b2b] shadow-sm"
+                        : "text-[#6b6b6b]"
+                    }`}
+                  >
+                    Lecturer
+                  </button>
+                </div>
+              </div>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {FACE_ANGLES.map((angle) => (
-                <Button
-                  key={angle}
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  disabled={capturedFaces.includes(angle) || capturingAngle !== null}
-                  onClick={() => captureFace(angle)}
+
+            <div className="space-y-4">
+              <h1 className="text-center text-xl font-semibold text-[#222] sm:text-2xl">
+                {title}
+              </h1>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="First Name" id="firstName">
+                  <Input
+                    id="firstName"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    placeholder="Enter your First Name"
+                    className="h-11 rounded-[8px] border-[#b2b2b2] px-3 text-[13px] placeholder:text-[#8b8b8b]"
+                  />
+                </Field>
+                <Field label="Last Name" id="lastName">
+                  <Input
+                    id="lastName"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    placeholder="Enter your Last Name"
+                    className="h-11 rounded-[8px] border-[#b2b2b2] px-3 text-[13px] placeholder:text-[#8b8b8b]"
+                  />
+                </Field>
+              </div>
+
+              <Field label={identifierLabel} id="identifier">
+                <Input
+                  id="identifier"
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
+                  placeholder={
+                    mode === "student"
+                      ? "Enter your Matric No."
+                      : "Enter your Staff ID"
+                  }
+                  className="h-11 rounded-[8px] border-[#b2b2b2] px-3 text-[13px] placeholder:text-[#8b8b8b]"
+                />
+              </Field>
+
+              <Field label={emailLabel} id="email">
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder={
+                    mode === "student"
+                      ? "Enter your Student Email"
+                      : "Enter your Email"
+                  }
+                  className="h-11 rounded-[8px] border-[#b2b2b2] px-3 text-[13px] placeholder:text-[#8b8b8b]"
+                />
+              </Field>
+
+              <Field label="Select your Department" id="department">
+                <Select
+                  value={department}
+                  onValueChange={(value) => setDepartment(value ?? "")}
                 >
-                  Capture {angle}
-                </Button>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                  <SelectTrigger className="h-11 rounded-[8px] border-[#b2b2b2] text-[13px]">
+                    <SelectValue placeholder="Select your Department" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {DEPARTMENTS.map((item) => (
+                      <SelectItem key={item} value={item}>
+                        {item}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </Field>
 
-        {/* Fingerprint */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Fingerprint className="size-4 text-primary" />
-              Fingerprint Registration
-              {fingerDone && <Check className="size-4 text-primary" />}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col items-center gap-4 py-2">
-            <div
-              className={cn(
-                "flex size-28 items-center justify-center rounded-full border-2",
-                fingerDone ? "border-primary bg-primary/5" : "border-dashed",
-                scanning && "animate-pulse border-primary",
-              )}
+              {mode === "student" ? (
+                <Field label="Level" id="level">
+                  <Select
+                    value={level}
+                    onValueChange={(value) => setLevel(value ?? "")}
+                  >
+                    <SelectTrigger className="h-11 rounded-[8px] border-[#b2b2b2] text-[13px]">
+                      <SelectValue placeholder="Select level" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {["100", "200", "300", "400", "500"].map((item) => (
+                        <SelectItem key={item} value={item}>
+                          {item}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </Field>
+              ) : null}
+
+              <Field label="Enter Password" id="password">
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter your Password"
+                    className="h-11 rounded-[8px] border-[#b2b2b2] px-3 pr-11 text-[13px] placeholder:text-[#8b8b8b]"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((current) => !current)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#a4a4a4] transition-colors hover:text-[#6f6f6f]"
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                  >
+                    {showPassword ? (
+                      <EyeOff className="size-5" />
+                    ) : (
+                      <Eye className="size-5" />
+                    )}
+                  </button>
+                </div>
+              </Field>
+
+              <Field label="Confirm Password" id="confirmPassword">
+                <div className="relative">
+                  <Input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirm your Password"
+                    className="h-11 rounded-[8px] border-[#b2b2b2] px-3 pr-11 text-[13px] placeholder:text-[#8b8b8b]"
+                  />
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setShowConfirmPassword((current) => !current)
+                    }
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#a4a4a4] transition-colors hover:text-[#6f6f6f]"
+                    aria-label={
+                      showConfirmPassword
+                        ? "Hide password confirmation"
+                        : "Show password confirmation"
+                    }
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="size-5" />
+                    ) : (
+                      <Eye className="size-5" />
+                    )}
+                  </button>
+                </div>
+              </Field>
+            </div>
+
+            <Button
+              type="submit"
+              disabled={saving}
+              className="h-12 w-full rounded-[6px] bg-[#0a2f66] text-[18px] font-medium text-white shadow-none hover:bg-[#5330cc]"
             >
-              <Fingerprint className={cn("size-12", fingerDone ? "text-primary" : "text-muted-foreground")} />
-            </div>
-            <p className="text-sm text-muted-foreground">
-              {fingerDone ? "Fingerprint template stored" : `Scanned ${fingerScans} of 2`}
-            </p>
-            <Button type="button" variant="outline" disabled={fingerDone || scanning} onClick={scanFinger}>
-              {scanning && <Loader2 className="size-4 animate-spin" />}
-              Scan Fingerprint
+              {saving ? "Saving..." : "Sign up"}
             </Button>
+
+            <div className="text-center text-[12px]">
+              <button
+                type="button"
+                className="text-[#8a66ff] underline underline-offset-2"
+                onClick={() => router.push(backHref)}
+              >
+                Have an account? Login
+              </button>
+            </div>
           </CardContent>
         </Card>
-      </div>
+      </form>
+    </div>
+  );
+}
 
-      <div className="flex justify-end gap-3">
-        <Button type="button" variant="outline" onClick={() => router.push(backHref)}>
-          Cancel
-        </Button>
-        <Button type="submit" disabled={saving}>
-          {saving && <Loader2 className="size-4 animate-spin" />}
-          Save Student
-        </Button>
-      </div>
-    </form>
-  )
+function LogoMark() {
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-[40px] font-semibold leading-none tracking-[-0.08em] text-[#1f1936]">
+        Attendice
+      </span>
+      <svg
+        width="54"
+        height="54"
+        viewBox="0 0 54 54"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M27 3.5L44.5 13.7V40.3L27 50.5L9.5 40.3V13.7L27 3.5Z"
+          stroke="#0a2f66"
+          strokeWidth="3.1"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </div>
+  );
+}
+
+function Field({
+  label,
+  id,
+  children,
+}: {
+  label: string;
+  id: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="space-y-2">
+      <Label htmlFor={id} className="text-[14px] font-medium text-[#262626]">
+        {label}
+      </Label>
+      {children}
+    </div>
+  );
 }
