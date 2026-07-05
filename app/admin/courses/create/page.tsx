@@ -1,55 +1,65 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Loader2 } from "lucide-react"
-import { toast } from "sonner"
-import { PageHeader } from "@/components/widgets"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent } from "@/components/ui/card"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { PageHeader } from "@/components/widgets";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 
-const LECTURERS = ["Dr. D. Maliki", "Engr. A. Bala", "Prof. K. Usman", "Dr. R. Adamu"]
+const LECTURERS = [
+  "Dr. D. Maliki",
+  "Engr. A. Bala",
+  "Prof. K. Usman",
+  "Dr. R. Adamu",
+];
 
 export default function CreateCoursePage() {
-  const router = useRouter()
+  const router = useRouter();
   const [form, setForm] = useState({
     code: "",
     title: "",
     level: "",
     semester: "",
     lecturer: "",
-  })
-  const [saving, setSaving] = useState(false)
+  });
+  const [saving, setSaving] = useState(false);
 
-  function update(key: keyof typeof form, value: string) {
-    setForm((f) => ({ ...f, [key]: value }))
+  function update(key: keyof typeof form, value: string | null) {
+    setForm((f) => ({ ...f, [key]: value }));
   }
 
   function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
+    e.preventDefault();
     if (Object.values(form).some((v) => !v)) {
-      toast.error("Fill in all fields")
-      return
+      toast.error("Fill in all fields");
+      return;
     }
-    setSaving(true)
+    setSaving(true);
     setTimeout(() => {
-      toast.success("Course created", { description: `${form.code} — ${form.title}` })
-      router.push("/admin/courses")
-    }, 800)
+      toast.success("Course created", {
+        description: `${form.code} — ${form.title}`,
+      });
+      router.push("/admin/courses");
+    }, 800);
   }
 
   return (
     <form onSubmit={handleSubmit} className="mx-auto max-w-2xl space-y-6">
-      <PageHeader title="Create Course" description="Add a new course to the department catalog." />
+      <PageHeader
+        title="Create Course"
+        description="Add a new course to the department catalog."
+      />
       <Card>
         <CardContent className="grid gap-4 p-6 sm:grid-cols-2">
           <div className="space-y-2">
@@ -63,7 +73,10 @@ export default function CreateCoursePage() {
           </div>
           <div className="space-y-2 sm:col-span-1">
             <Label>Level</Label>
-            <Select value={form.level} onValueChange={(v) => update("level", v)}>
+            <Select
+              value={form.level}
+              onValueChange={(v) => update("level", v)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select level" />
               </SelectTrigger>
@@ -87,7 +100,10 @@ export default function CreateCoursePage() {
           </div>
           <div className="space-y-2">
             <Label>Semester</Label>
-            <Select value={form.semester} onValueChange={(v) => update("semester", v)}>
+            <Select
+              value={form.semester}
+              onValueChange={(v) => update("semester", v)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select semester" />
               </SelectTrigger>
@@ -99,7 +115,10 @@ export default function CreateCoursePage() {
           </div>
           <div className="space-y-2">
             <Label>Lecturer</Label>
-            <Select value={form.lecturer} onValueChange={(v) => update("lecturer", v)}>
+            <Select
+              value={form.lecturer}
+              onValueChange={(v) => update("lecturer", v)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Assign lecturer" />
               </SelectTrigger>
@@ -115,7 +134,11 @@ export default function CreateCoursePage() {
         </CardContent>
       </Card>
       <div className="flex justify-end gap-3">
-        <Button type="button" variant="outline" onClick={() => router.push("/admin/courses")}>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => router.push("/admin/courses")}
+        >
           Cancel
         </Button>
         <Button type="submit" disabled={saving}>
@@ -124,5 +147,5 @@ export default function CreateCoursePage() {
         </Button>
       </div>
     </form>
-  )
+  );
 }
