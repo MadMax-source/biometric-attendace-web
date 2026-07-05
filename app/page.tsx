@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Eye, EyeOff, Fingerprint, ShieldCheck } from "lucide-react";
@@ -30,16 +30,20 @@ export default function LoginPage() {
     if (!loading && user) router.replace(`/${user.role}`);
   }, [loading, router, user]);
 
+  const hasTriggeredSplash = useRef(false);
+
   useEffect(() => {
     function syncMobileConcept() {
       const isMobile = window.matchMedia("(max-width: 767px)").matches;
 
-      if (!isMobile) {
+      if (!isMobile || hasTriggeredSplash.current) {
         setShowMobileConcept(false);
         return;
       }
 
+      hasTriggeredSplash.current = true;
       setShowMobileConcept(true);
+
       const timeoutId = window.setTimeout(() => {
         setShowMobileConcept(false);
       }, 10000);
