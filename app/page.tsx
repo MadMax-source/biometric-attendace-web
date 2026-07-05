@@ -101,9 +101,8 @@ export default function LoginPage() {
           <div className="relative z-10 flex h-full max-h-[920px] w-full max-w-[520px] flex-col justify-center space-y-5">
             <div className="flex items-center justify-between text-white/85">
               <div>
-                <h1 className="mt-2 text-3xl font-semibold leading-tight text-white">
-                  blockchain-based multimodal attendance system with offline
-                  synchronization for low-connectivity environments
+                <h1 className="mt-2 text-3xl font-semibold leading-tight text-white capitalize">
+                  blockchain-based multimodal attendance system
                 </h1>
               </div>
               <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-sm">
@@ -118,6 +117,9 @@ export default function LoginPage() {
                 className="h-[420px] w-full object-cover object-center sm:h-[520px]"
               />
             </div>
+            <h1 className="mt-2 text-3xl font-semibold leading-tight text-white capitalize">
+              with offline synchronization for low-connectivity environments
+            </h1>
 
             <div className="space-y-4 text-white/80">
               <div className="flex flex-wrap gap-4">
@@ -153,7 +155,7 @@ export default function LoginPage() {
           <div className="relative z-10 flex h-full flex-col justify-between px-5 py-5 sm:px-6 md:px-8 md:py-10 xl:px-12 xl:py-12">
             <div className="max-w-2xl space-y-10">
               <div className="space-y-5">
-                <h1 className=" text-3xl font-bold  xl:text-5xl">
+                <h1 className="mt-2 text-3xl font-semibold leading-tight text-white capitalize">
                   blockchain-based multimodal attendance system
                 </h1>
               </div>
@@ -165,7 +167,7 @@ export default function LoginPage() {
                   className="h-[320px] w-full object-cover object-center xl:h-[520px]"
                 />
               </div>
-              <h1 className=" text-3xl font-bold  xl:text-5xl">
+              <h1 className="mt-2 text-3xl font-semibold leading-tight text-white capitalize">
                 with offline synchronization for low-connectivity environments
               </h1>
 
