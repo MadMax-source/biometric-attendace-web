@@ -154,8 +154,7 @@ export default function LoginPage() {
             <div className="max-w-2xl space-y-10">
               <div className="space-y-5">
                 <h1 className=" text-3xl font-bold  xl:text-5xl">
-                  blockchain-based multimodal attendance system with offline
-                  synchronization for low-connectivity environments
+                  blockchain-based multimodal attendance system
                 </h1>
               </div>
 
@@ -166,6 +165,9 @@ export default function LoginPage() {
                   className="h-[320px] w-full object-cover object-center xl:h-[520px]"
                 />
               </div>
+              <h1 className=" text-3xl font-bold  xl:text-5xl">
+                with offline synchronization for low-connectivity environments
+              </h1>
 
               <div className="flex flex-wrap gap-7">
                 <Feature
