@@ -283,7 +283,7 @@ export function RegisterStudentForm({
             <Button
               type="submit"
               disabled={saving}
-              className="h-12 w-full rounded-[6px] bg-[#0a2f66] text-[18px] font-medium text-white shadow-none hover:bg-[#5330cc]"
+              className="h-12 w-full rounded-[6px] bg-[#0a2f66] text-[18px] font-medium text-white shadow-none hover:bg-white hover:text-[#0a2f66] hover:shadow-[0_4px_16px_rgba(15,23,42,0.12)] focus-visible:bg-white focus-visible:text-[#0a2f66] focus-visible:shadow-[0_4px_16px_rgba(15,23,42,0.12)]"
             >
               {saving ? "Saving..." : "Sign up"}
             </Button>
@@ -291,7 +291,7 @@ export function RegisterStudentForm({
             <div className="text-center text-[12px]">
               <button
                 type="button"
-                className="text-[#8a66ff] underline underline-offset-2"
+                className="text-[#0a2f66] underline underline-offset-2 "
                 onClick={() => router.push(backHref)}
               >
                 Have an account? Login
