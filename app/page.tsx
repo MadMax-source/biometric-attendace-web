@@ -9,7 +9,6 @@ import { useAuth } from "@/lib/auth-context";
 import { DEMO_ACCOUNTS, type Role } from "@/lib/mock-data";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { div } from "framer-motion/m";
 
 type LoginMode = "admin" | "lecturer" | "student";
 
@@ -311,7 +310,7 @@ export default function LoginPage() {
 
                 <div className="flex items-center justify-between px-1 pt-1 text-[12px]">
                   <Link
-                    href="/register"
+                    href="/Registration"
                     className="text-[#0a2f66] underline underline-offset-2"
                   >
                     New? Register Here

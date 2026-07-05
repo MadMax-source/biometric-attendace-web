@@ -78,6 +78,8 @@ export function RegisterStudentForm({
       return;
     }
 
+    // send data to backend via axios
+
     setSaving(true);
     window.setTimeout(() => {
       toast.success(
