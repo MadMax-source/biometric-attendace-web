@@ -4,7 +4,6 @@ const sanitizedEnvUrl = process.env.NEXT_PUBLIC_API_URL?.trim().replace(
   /^['\"]|['\"]$/g,
   "",
 );
-
 const BACKEND_URL = sanitizedEnvUrl || "http://localhost:5000";
 
 const BACKENDAPI = axios.create({
