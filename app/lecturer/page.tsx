@@ -70,7 +70,9 @@ export default function LecturerDashboard() {
                   {c.level} Level · {c.studentIds.length} students
                 </p>
               </div>
-              <Button asChild size="sm" variant="outline">
+              <Button size="sm" variant="outline">
+                {" "}
+                {/* i remove asChild */}
                 <Link href={`/lecturer/courses/${c.id}`}>Open</Link>
               </Button>
             </div>
@@ -100,7 +102,9 @@ export default function LecturerDashboard() {
                   </p>
                 </div>
                 {s.active ? (
-                  <Button asChild size="sm">
+                  <Button size="sm" variant="outline">
+                    {" "}
+                    {/*i remove asChild */}
                     <Link href={`/lecturer/courses/${s.courseId}/attendance`}>
                       Take Attendance
                     </Link>

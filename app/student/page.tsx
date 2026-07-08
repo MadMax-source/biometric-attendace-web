@@ -7,7 +7,6 @@ import {
   Layers,
   Fingerprint,
   ScanFace,
-  QrCode,
 } from "lucide-react";
 
 const STUDENT = {
@@ -15,7 +14,7 @@ const STUDENT = {
   attendedMonth: 0,
   percentage: 0,
   missed: 0,
-  isEnrolled: true,
+  isEnrolled: false,
 };
 
 export default function StudentDashboard() {
@@ -88,7 +87,7 @@ export default function StudentDashboard() {
   );
 }
 
-// Chart extracted to keep code clean
+// i will add a chart component here, by using react-chartjs-2 or any other chart library, but for now, I will just add a placeholder div with a message "Attendance Chart Component"
 function ChartCard() {
   return (
     <div className="flex min-h-[400px] w-full flex-col items-center justify-center rounded-[20px] bg-white dark:bg-slate-900 p-6 shadow-sm border border-slate-100 dark:border-slate-800">

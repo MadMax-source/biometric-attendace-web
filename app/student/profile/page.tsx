@@ -3,8 +3,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 import BACKENDAPI from "@/API";
-
-// Import your new components (adjust the path based on your folder structure)
 import ProfileCard from "@/components/profile";
 import CourseGrid, { Course } from "@/components/profile/coursegrid";
 import RegistrationFAB from "@/components/profile/registrationFab";
