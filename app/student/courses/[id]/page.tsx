@@ -8,17 +8,14 @@ import {
   CheckCircle2,
   XCircle,
   Hexagon,
-  X,
-  Fingerprint,
-  Link as LinkIcon,
 } from "lucide-react";
-import { STUDENT_COURSES } from "@/app/student/courses/page";
 import { PageHeader, StatCard } from "@/components/widgets";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { BlockchainReceiptModal } from "@/components/blockchain";
+import { useStudentAttendance } from "@/hook/useAttendance"; // Ensure path is correct
 
 export default function StudentCourseDetail({
   params,
@@ -30,12 +27,67 @@ export default function StudentCourseDetail({
 
   const [selectedReceipt, setSelectedReceipt] = useState<any | null>(null);
 
-  const course = STUDENT_COURSES.find((c) => c.id === id) ?? STUDENT_COURSES[0];
-  const absent = course.total - course.present;
-  const pct = Math.round((course.present / course.total) * 100);
+  // 1. Hook MUST be inside the component
+  const { courses, isLoading, isError } = useStudentAttendance();
+
+  // 2. Handle Loading State FIRST
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <PageHeader title="Loading Course Details..." />
+        <div className="flex justify-center py-12">
+          <p className="text-slate-500 animate-pulse font-medium">
+            Fetching from database...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // 3. Handle Error State
+  if (isError) {
+    return (
+      <div className="space-y-6">
+        <PageHeader title="Error" />
+        <div className="py-12 text-center text-red-500 font-medium">
+          Failed to load course details.
+        </div>
+      </div>
+    );
+  }
+
+  // 4. Safely find the specific course now that data is guaranteed to be loaded
+  const course = courses?.find((c: any) => c.id === id);
+
+  // 5. Handle case where the ID in the URL doesn't match any enrolled course
+  if (!course) {
+    return (
+      <div className="space-y-6">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="-ml-2 text-slate-500"
+          onClick={() => router.push("/student/courses")}
+        >
+          <ArrowLeft className="size-4 mr-2" />
+          Back to my courses
+        </Button>
+        <PageHeader title="Course Not Found" />
+        <div className="py-12 text-center text-slate-500">
+          You do not appear to be registered for this course, or it does not
+          exist.
+        </div>
+      </div>
+    );
+  }
+
+  // 6. Safe Math calculations
+  const absent = Math.max(0, course.total - course.present);
+  const pct =
+    course.total > 0 ? Math.round((course.present / course.total) * 100) : 0;
 
   return (
-    <div className="space-y-6 relative">
+    <div className="space-y-6 relative pb-20">
       <Button
         variant="ghost"
         size="sm"
@@ -92,41 +144,49 @@ export default function StudentCourseDetail({
         </CardHeader>
         <CardContent className="p-0">
           <div className="divide-y divide-slate-100 dark:divide-slate-800/60">
-            {course.history.map((r) => (
-              <div
-                key={r.id}
-                className="flex items-center justify-between p-4 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/40"
-              >
-                <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                  {r.date}
-                </span>
+            {course.history && course.history.length > 0 ? (
+              course.history.map((r: any) => (
+                <div
+                  key={r.id}
+                  className="flex items-center justify-between p-4 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/40"
+                >
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                    {r.date}
+                  </span>
 
-                {r.status === "present" ? (
-                  <div className="flex items-center gap-3">
-                    <Badge className="gap-1.5 bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50 border-none px-2.5 py-1">
-                      <CheckCircle2 className="size-3.5" />
-                      Present
-                    </Badge>
+                  {r.status === "present" ? (
+                    <div className="flex items-center gap-3">
+                      <Badge className="gap-1.5 bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50 border-none px-2.5 py-1">
+                        <CheckCircle2 className="size-3.5" />
+                        Present
+                      </Badge>
 
-                    <button
-                      onClick={() => setSelectedReceipt(r)}
-                      className="flex items-center gap-1.5 rounded-lg bg-[#f7f2fe] dark:bg-purple-900/20 px-3 py-1.5 text-xs font-bold text-[#5e3bce] dark:text-[#a98cfb] transition-all hover:bg-[#5e3bce] hover:text-white dark:hover:bg-purple-800/40 dark:hover:text-purple-300 border border-purple-100 dark:border-purple-800/30"
+                      {r.transactionHash && (
+                        <button
+                          onClick={() => setSelectedReceipt(r)}
+                          className="flex items-center gap-1.5 rounded-lg bg-[#f7f2fe] dark:bg-purple-900/20 px-3 py-1.5 text-xs font-bold text-[#5e3bce] dark:text-[#a98cfb] transition-all hover:bg-[#5e3bce] hover:text-white dark:hover:bg-purple-800/40 dark:hover:text-purple-300 border border-purple-100 dark:border-purple-800/30"
+                        >
+                          <Hexagon className="size-3.5" />
+                          Receipt
+                        </button>
+                      )}
+                    </div>
+                  ) : (
+                    <Badge
+                      variant="destructive"
+                      className="gap-1.5 bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-950/30 dark:text-red-400 dark:hover:bg-red-900/40 border-none px-2.5 py-1"
                     >
-                      <Hexagon className="size-3.5" />
-                      Receipt
-                    </button>
-                  </div>
-                ) : (
-                  <Badge
-                    variant="destructive"
-                    className="gap-1.5 bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-950/30 dark:text-red-400 dark:hover:bg-red-900/40 border-none px-2.5 py-1"
-                  >
-                    <XCircle className="size-3.5" />
-                    Absent
-                  </Badge>
-                )}
+                      <XCircle className="size-3.5" />
+                      Absent
+                    </Badge>
+                  )}
+                </div>
+              ))
+            ) : (
+              <div className="p-6 text-center text-sm text-slate-500">
+                No classes have been held for this course yet.
               </div>
-            ))}
+            )}
           </div>
         </CardContent>
       </Card>
