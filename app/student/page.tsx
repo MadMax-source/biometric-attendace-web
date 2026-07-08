@@ -29,8 +29,6 @@ export default function StudentDashboard() {
           Dashboard
         </h1>
       </div>
-
-      {/* DYNAMIC LAYOUT: Grid handles the exact sizing difference perfectly */}
       {isEnrolled ? (
         // ENROLLED STATE: Cards in a row, chart below
         <div className="flex flex-col gap-6">
@@ -43,7 +41,6 @@ export default function StudentDashboard() {
           </div>
         </div>
       ) : (
-        // PENDING STATE: 2-Column Grid (Left: Card & Chart, Right: Stacked Stats)
         <div className="grid grid-cols-1 items-start gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
           <div className="flex flex-col gap-6">
             {/* PENDING ENROLLMENT CARD */}
@@ -75,9 +72,6 @@ export default function StudentDashboard() {
                 <span className="text-[10px] font-bold uppercase tracking-widest text-purple-500 dark:text-purple-400">
                   Scan at this kiosk
                 </span>
-                <div className="rounded-2xl bg-white dark:bg-slate-900 p-2 shadow-sm">
-                  <QrCode className="size-20 text-black dark:text-white" />
-                </div>
               </div>
             </div>
 

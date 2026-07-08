@@ -1,61 +1,76 @@
-"use client"
+"use client";
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
-import { DEMO_ACCOUNTS, type Role, type User } from "@/lib/mock-data"
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  type ReactNode,
+} from "react";
+import { User, Role } from "./mock-data";
 
 type AuthContextType = {
-  user: User | null
-  loading: boolean
-  login: (identifier: string, password: string) => { ok: boolean; role?: Role; error?: string }
-  logout: () => void
-}
+  user: User | null;
+  loading: boolean;
+  login: (identifier: string, password: string, role: Role) => Promise<User>;
+  logout: () => void;
+  setLoading: (loading: boolean) => void;
+  setUser: (user: User) => void;
+};
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
-
-const STORAGE_KEY = "bioattend_user"
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState<User | null>(null);
 
+  // Initialize loading as true to prevent premature redirects on protected routes
+  const [loading, setLoading] = useState(true);
+
+  // Restore session from localStorage on mount
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY)
-      if (raw) setUser(JSON.parse(raw))
-    } catch {
-      // ignore
-    }
-    setLoading(false)
-  }, [])
+    const initializeAuth = () => {
+      try {
+        const storedUser = localStorage.getItem("user");
+        const storedToken = localStorage.getItem("token");
 
-  function login(identifier: string, password: string) {
-    const match = DEMO_ACCOUNTS.find(
-      (a) => a.identifier.toLowerCase() === identifier.trim().toLowerCase() && a.password === password,
-    )
-    if (!match) {
-      return { ok: false, error: "Invalid credentials. Use a demo account below." }
-    }
-    const nextUser: User = {
-      id: match.role,
-      name: match.label,
-      identifier: match.identifier,
-      role: match.role,
-    }
-    setUser(nextUser)
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(nextUser))
-    return { ok: true, role: match.role }
-  }
+        if (storedUser && storedToken) {
+          setUser(JSON.parse(storedUser));
+        }
+      } catch (error) {
+        console.error("Failed to restore session:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  function logout() {
-    setUser(null)
-    localStorage.removeItem(STORAGE_KEY)
-  }
+    initializeAuth();
+  }, []);
 
-  return <AuthContext.Provider value={{ user, loading, login, logout }}>{children}</AuthContext.Provider>
+  const login = async (
+    email: string,
+    password: string,
+    role: Role,
+  ): Promise<User> => {
+    return {} as User;
+  };
+
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+  };
+
+  return (
+    <AuthContext.Provider
+      value={{ user, loading, login, logout, setLoading, setUser }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {
-  const ctx = useContext(AuthContext)
-  if (!ctx) throw new Error("useAuth must be used within AuthProvider")
-  return ctx
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
+  return ctx;
 }

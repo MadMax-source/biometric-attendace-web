@@ -9,6 +9,7 @@ import { useAuth } from "@/lib/auth-context";
 import { DEMO_ACCOUNTS, type Role } from "@/lib/mock-data";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import BACKENDAPI from "@/API";
 
 type LoginMode = "admin" | "lecturer" | "student";
 
@@ -17,12 +18,13 @@ const LEFT_SIDE_IMAGE =
 
 export default function LoginPage() {
   const router = useRouter();
-  const { user, loading, login } = useAuth();
+  const { user, loading, setUser } = useAuth();
+
   const [mode, setMode] = useState<LoginMode>("student");
-  const [identifier, setIdentifier] = useState("");
+  const [email, setemail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [showMobileConcept, setShowMobileConcept] = useState(true);
 
   useEffect(() => {
@@ -45,7 +47,7 @@ export default function LoginPage() {
 
       const timeoutId = window.setTimeout(() => {
         setShowMobileConcept(false);
-      }, 10000);
+      }, 7000);
 
       return () => window.clearTimeout(timeoutId);
     }
@@ -65,34 +67,67 @@ export default function LoginPage() {
 
   function selectMode(nextMode: LoginMode) {
     setMode(nextMode);
-    const demo = DEMO_ACCOUNTS.find((item) => item.role === nextMode);
-    if (demo) {
-      setIdentifier(demo.identifier);
-      setPassword("password");
-    }
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
 
-    const res = login(identifier, password);
-    if (res.ok && res.role) {
-      if (res.role !== activeRole) {
+    try {
+      if (!email || !password) {
+        toast.error("Email and password are required");
         setSubmitting(false);
-        toast.error(
-          `Those credentials are for a ${res.role}, not a ${activeRole}.`,
-        );
+        return;
+      }
+      if (!activeRole) {
+        toast.error("Role is required");
+        setSubmitting(false);
         return;
       }
 
-      router.replace(`/${res.role}`);
-      return;
-    }
+      const response = await BACKENDAPI.post("/login", {
+        email,
+        password,
+        role: activeRole,
+      });
 
-    setSubmitting(false);
-    toast.error(res.error ?? "Login failed");
-  }
+      const data = response.data;
+
+      if (data && data.token) {
+        const loggedInUser = {
+          id: data?.id || "",
+          email: data?.email || "",
+          role: data?.role || activeRole,
+          fullName: data?.fullName || "",
+          matricNumber: data?.matricNumber || "",
+          phoneNumber: data?.phoneNumber || "",
+          imageurl: data?.imageurl || "",
+          token: data?.token || "",
+          department: data?.department || "",
+          level: data?.level || "",
+        };
+
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(loggedInUser));
+        setUser(loggedInUser);
+
+        toast.success(`Welcome back, ${data.fullName}!`);
+      }
+    } catch (error: any) {
+      console.log("Full Backend Error Details:", error);
+      const errorMessage =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        (typeof error.response?.data === "string"
+          ? error.response.data
+          : null) ||
+        error.message ||
+        "An unexpected error occurred."; // Absolute last resort
+      toast.error(errorMessage);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <main className="min-h-dvh bg-[#a9c8f4] p-3 sm:p-4">
@@ -242,18 +277,18 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form onSubmit={handleLogin} className="space-y-5">
                 <div className="space-y-2">
                   <label
                     htmlFor="identifier"
                     className="block text-[17px] font-semibold text-[#262626] border-[#0a2f66]"
                   >
-                    {modeLabel === "Student" ? "Matric No." : "Email / ID"}
+                    {modeLabel === "Student" ? "Student-Email." : "Email /ID"}
                   </label>
                   <Input
                     id="identifier"
-                    value={identifier}
-                    onChange={(e) => setIdentifier(e.target.value)}
+                    value={email}
+                    onChange={(e) => setemail(e.target.value)}
                     placeholder={
                       mode === "student"
                         ? "Enter your Matric No."
@@ -261,7 +296,7 @@ export default function LoginPage() {
                           ? "Enter your Email / Staff ID"
                           : "Enter your Email"
                     }
-                    className="h-12  border-[#0a2f66] px-3 text-[13px] placeholder:text-[#8b8b8b]"
+                    className=" text-black h-12 border-[#0a2f66] px-3 text-[13px]  placeholder:text-[#8b8b8b]"
                     required
                   />
                 </div>
@@ -269,7 +304,7 @@ export default function LoginPage() {
                 <div className="space-y-2">
                   <label
                     htmlFor="password"
-                    className="block text-[17px] font-semibold text-[#262626] border-[#0a2f66]"
+                    className="block text-[17px] font-semibold text-[#262626] border-[,]"
                   >
                     Password
                   </label>
@@ -280,7 +315,7 @@ export default function LoginPage() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Enter your Password"
-                      className="h-12 rounded-[8px] border-[#0a2f66] px-3 pr-11 text-[13px] placeholder:text-[#8b8b8b]"
+                      className="h-12 rounded-[8px] border-[#0a2f66] px-3 pr-11 text-[13px] placeholder:text-[#8b8b8b] text-black"
                       required
                     />
                     <button
@@ -301,6 +336,7 @@ export default function LoginPage() {
                 </div>
 
                 <Button
+                  onClick={handleLogin}
                   type="submit"
                   disabled={submitting}
                   className="h-12 w-full rounded-[6px] bg-[#0a2f66] text-[18px] font-medium text-white shadow-none "

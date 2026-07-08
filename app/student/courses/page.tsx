@@ -141,18 +141,14 @@ export default function StudentCoursesPage() {
               className="group block"
             >
               <Card className="rounded-[20px] border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm transition-all duration-200 hover:border-[#5e3bce]/40 hover:shadow-md dark:hover:border-[#a98cfb]/40">
-                {/* Increased padding (p-5 sm:p-6) for a more breathable resolution */}
                 <CardContent className="flex items-center gap-4 sm:gap-6 p-5 sm:p-6">
-                  {/* Left Icon - Hidden on very small mobile screens to save space */}
                   <div className="hidden sm:flex size-12 shrink-0 items-center justify-center rounded-xl bg-[#f0f6ff] dark:bg-blue-950/30 text-[#5a8ce6]">
                     <BookOpen className="size-6" />
                   </div>
 
-                  {/* Core Content Area */}
                   <div className="min-w-0 flex-1 space-y-3">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-0">
                       <div>
-                        {/* Sharper Typography */}
                         <p className="text-lg font-black text-slate-800 dark:text-slate-100 leading-tight">
                           {c.code}
                         </p>
@@ -173,14 +169,12 @@ export default function StudentCoursesPage() {
                       </div>
                     </div>
 
-                    {/* Shadcn UI Progress component, dialed in with proper height */}
                     <Progress
                       value={pct}
                       className="h-2 bg-slate-100 dark:bg-slate-800"
                     />
                   </div>
 
-                  {/* Right Action Chevron */}
                   <ChevronRight className="size-5 shrink-0 text-slate-300 dark:text-slate-600 transition-transform group-hover:translate-x-1 group-hover:text-[#5e3bce] dark:group-hover:text-[#a98cfb]" />
                 </CardContent>
               </Card>

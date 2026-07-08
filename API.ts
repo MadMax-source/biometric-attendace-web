@@ -16,7 +16,7 @@ BACKENDAPI.interceptors.request.use(
   (config) => {
     // Check client storage dynamically right before dispatching the request
     if (typeof window !== "undefined") {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("token");
       if (token) {
         config.headers["Authorization"] = `Bearer ${token}`;
       } else {

@@ -157,14 +157,24 @@ export function DashboardShell({
               className="flex items-center gap-3 hover:opacity-80 transition-opacity cursor-pointer"
             >
               <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-300">
-                <span className="font-semibold">M</span>
+                {user?.imageurl ? (
+                  <img
+                    src={user.imageurl}
+                    alt="Profile"
+                    className="size-full rounded-full object-cover"
+                  />
+                ) : (
+                  <span className="font-semibold">
+                    {user?.fullName.charAt(0)?.toUpperCase() || ""}
+                  </span>
+                )}
               </div>
               <div className="hidden flex-col sm:flex text-left">
                 <span className="text-sm font-bold text-slate-800 dark:text-slate-100">
-                  Muhammad Sodiq
+                  {user?.email}
                 </span>
                 <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">
-                  2021/1/81940CP
+                  {user?.matricNumber}
                 </span>
               </div>
               <ChevronDown className="size-4 text-slate-400 hidden sm:block" />
