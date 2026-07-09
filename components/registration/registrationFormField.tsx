@@ -55,8 +55,13 @@ export default function RegistrationFormFields({
       <Field label={identifierLabel} id="identifier">
         <Input
           id="identifier"
-          value={formData.matricNumber}
-          onChange={(e) => updateField("matricNumber", e.target.value)}
+          value={mode === "student" ? formData.matricNumber : formData.staffKey}
+          onChange={(e) =>
+            updateField(
+              mode === "student" ? "matricNumber" : "staffKey",
+              e.target.value,
+            )
+          }
           placeholder={
             mode === "student" ? "Enter your Matric No." : "Enter your Staff ID"
           }

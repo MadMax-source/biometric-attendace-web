@@ -27,6 +27,7 @@ export function RegisterStudentForm({
     firstName: "",
     lastName: "",
     matricNumber: "",
+    staffKey: "",
     email: "",
     phoneNumber: "",
     department: "Computer Engineering",
@@ -46,6 +47,7 @@ export function RegisterStudentForm({
       firstName,
       lastName,
       matricNumber,
+      staffKey,
       email,
       department,
       password,
@@ -57,7 +59,8 @@ export function RegisterStudentForm({
     if (
       !firstName ||
       !lastName ||
-      !matricNumber ||
+      (mode === "student" && !matricNumber) ||
+      (mode === "lecturer" && !staffKey) ||
       !email ||
       !department ||
       !password ||
@@ -84,6 +87,7 @@ export function RegisterStudentForm({
         password,
         role: mode,
         phoneNumber,
+        staffKey: mode === "lecturer" ? staffKey : "",
         matricNumber: mode === "student" ? matricNumber : "",
         fullName: `${firstName} ${lastName}`,
         department,
