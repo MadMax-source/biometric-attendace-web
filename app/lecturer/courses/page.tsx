@@ -1,19 +1,23 @@
-import Link from "next/link"
-import { BookOpen, Users } from "lucide-react"
-import { courses } from "@/lib/mock-data"
-import { PageHeader } from "@/components/widgets"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import Link from "next/link";
+import { BookOpen, Users } from "lucide-react";
+import { courses } from "@/lib/mock-data";
+import { Slot } from "@radix-ui/react-slot";
+import { PageHeader } from "@/components/widgets";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
-const LECTURER = "Dr. D. Maliki"
+const LECTURER = "Dr. D. Maliki";
 
 export default function LecturerCoursesPage() {
-  const myCourses = courses.filter((c) => c.lecturer === LECTURER)
+  const myCourses = courses.filter((c) => c.lecturer === LECTURER);
 
   return (
     <div className="space-y-6">
-      <PageHeader title="My Courses" description="Courses assigned to you this session." />
+      <PageHeader
+        title="My Courses"
+        description="Courses assigned to you this session."
+      />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {myCourses.map((c) => (
           <Card key={c.id} className="flex flex-col">
@@ -26,7 +30,9 @@ export default function LecturerCoursesPage() {
               </div>
               <div className="space-y-1">
                 <p className="font-semibold text-primary">{c.code}</p>
-                <p className="text-sm leading-relaxed text-muted-foreground">{c.title}</p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  {c.title}
+                </p>
               </div>
               <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
                 <Users className="size-4" />
@@ -40,5 +46,5 @@ export default function LecturerCoursesPage() {
         ))}
       </div>
     </div>
-  )
+  );
 }

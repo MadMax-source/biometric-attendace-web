@@ -71,7 +71,7 @@ export default function HistoryPage() {
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  // --- 3. DASHBOARD METRICS MATH ---
+  //  DASHBOARD METRICS MATH ---
   const totalCourses = validCourses.length;
 
   // Overall calculations
@@ -127,7 +127,7 @@ export default function HistoryPage() {
         </button>
       </div>
 
-      {/* TOP-LEVEL STATS GRID (This is what was missing in your paste!) */}
+      {/** DASHBOARD METRICS **/}
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <StatCard
           label="Registered Courses"
