@@ -7,7 +7,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useStudentAttendance } from "@/hook/useAttendance";
 
-// Keep your interfaces
 export type AttendanceStatus = "present" | "absent";
 export interface AttendanceRecord {
   id: string;
@@ -26,10 +25,8 @@ export interface StudentCourse {
 }
 
 export default function StudentCoursesPage() {
-  // 1. Fetch live data using your hook
   const { courses, isLoading, isError, refresh } = useStudentAttendance();
 
-  // 2. Handle Loading
   if (isLoading) {
     return (
       <div className="space-y-6 pb-20">
@@ -91,9 +88,7 @@ export default function StudentCoursesPage() {
             </p>
           </div>
         ) : (
-          /* 5. Map over live data */
           courses.map((c: StudentCourse) => {
-            // Prevent NaN if total is 0
             const pct =
               c.total > 0 ? Math.round((c.present / c.total) * 100) : 0;
 

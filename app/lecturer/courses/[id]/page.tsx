@@ -1,103 +1,225 @@
-"use client"
+"use client";
 
-import { use, useState } from "react"
-import { useRouter } from "next/navigation"
-import { ArrowLeft, CalendarClock, Loader2, MapPin, Play, Users } from "lucide-react"
-import { toast } from "sonner"
-import { courses, getCourseById } from "@/lib/mock-data"
-import { PageHeader } from "@/components/widgets"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { use, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useLecturerDashboard } from "@/hook/useLecturerDashboard";
+import { ArrowLeft, Loader2, AlertCircle, Radio } from "lucide-react";
+import { toast } from "sonner";
+import BACKENDAPI from "@/API";
+import { CourseHeader } from "@/components/attendance-kiosk/kioskHeader";
+import { SessionSetupForm } from "@/components/attendance-kiosk/sessionSetupForm";
 
-export default function LecturerCourseDetail({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params)
-  const router = useRouter()
-  const course = getCourseById(id) ?? courses[0]
+interface Course {
+  id: string;
+  code: string;
+  title: string;
+  level: number;
+  enrolled_count: number;
+}
+
+interface Schedule {
+  id: string;
+  course_id: string;
+  code: string;
+  title: string;
+  start_time: string;
+  end_time: string;
+  venue: string;
+  is_active: boolean;
+}
+
+export default function LecturerCourseDetail({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = use(params);
+  const router = useRouter();
+
+  const { courses, isError, isLoading, schedule } = useLecturerDashboard();
+
+  const course = courses.find((c) => c.id === id);
+  const today = new Date().toISOString().split("T")[0];
 
   const [form, setForm] = useState({
-    date: "20/06/2026",
-    startTime: "9:00 AM",
-    endTime: "11:00 AM",
-    venue: "ETF Lecture Hall",
-  })
-  const [starting, setStarting] = useState(false)
+    date: today,
+    startTime: "",
+    endTime: "",
+    venue: "",
+  });
 
-  function update(key: keyof typeof form, value: string) {
-    setForm((f) => ({ ...f, [key]: value }))
+  const [starting, setStarting] = useState(false);
+  const [ending, setEnding] = useState(false); // New state for ending session
+
+  // Find if this course is on today's schedule
+  const scheduledClass = schedule?.find((s) => s.course_id === id);
+  // Check if it is currently active
+  const isSessionActive = scheduledClass?.is_active || false;
+
+  useEffect(() => {
+    if (scheduledClass) {
+      setForm({
+        date: today,
+        startTime: scheduledClass.start_time,
+        endTime: scheduledClass.end_time,
+        venue: scheduledClass.venue,
+      });
+    }
+  }, [scheduledClass, today]);
+
+  function updateForm(key: keyof typeof form, value: string) {
+    setForm((f) => ({ ...f, [key]: value }));
   }
 
-  function startSession() {
+  async function startSession() {
     if (Object.values(form).some((v) => !v)) {
-      toast.error("Fill in all session details")
-      return
+      toast.error("Fill in all session details");
+      return;
     }
-    setStarting(true)
-    setTimeout(() => {
-      toast.success("Attendance session started")
-      router.push(`/lecturer/courses/${course.id}/attendance`)
-    }, 800)
+
+    setStarting(true);
+    try {
+      // Included the form data so your backend can actually save it!
+      const response = await BACKENDAPI.post("/start-session", {
+        courseId: course?.id,
+      });
+
+      if (response?.status === 200 || response?.status === 201) {
+        toast.success(response?.data?.message);
+        router.push(`/lecturer/courses/${course?.id}/attendance`);
+      }
+    } catch (error: any) {
+      toast.error(
+        error?.response?.data?.error ||
+          error?.message ||
+          "Failed to start session",
+      );
+    } finally {
+      setStarting(false);
+    }
+  }
+
+  async function endSession() {
+    try {
+      const activeSessionResponse = await BACKENDAPI.get(
+        `/active-session/${course?.id}`,
+      );
+      if (activeSessionResponse?.status === 200) {
+        const sessionId = activeSessionResponse?.data?.session?.id;
+        if (!sessionId) {
+          toast.error("No active session found to end.");
+          return;
+        }
+        const response = await BACKENDAPI.post("/end-session", {
+          courseId: course?.id,
+          sessionId: sessionId,
+        });
+
+        if (response?.status === 200) {
+          toast.success("Session ended successfully");
+          window.location.reload();
+        }
+      }
+    } catch (error: any) {
+      toast.error(error?.response?.data?.error || "Failed to end session");
+    } finally {
+      setEnding(false);
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex h-[60vh] w-full flex-col items-center justify-center gap-3">
+        <Loader2 className="size-10 animate-spin text-indigo-600 dark:text-indigo-400" />
+        <p className="text-sm font-semibold text-slate-500">
+          Loading course details...
+        </p>
+      </div>
+    );
+  }
+
+  if (isError || !course) {
+    return (
+      <div className="max-w-4xl mx-auto pt-10">
+        <div className="flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50 p-6 text-red-600 shadow-sm">
+          <AlertCircle className="size-6 shrink-0" />
+          <div>
+            <p className="font-bold">Course not found</p>
+            <p className="text-sm opacity-80 mt-1">
+              {isError
+                ? "Failed to connect to the server."
+                : "This course doesn't exist or isn't assigned to you."}
+            </p>
+          </div>
+        </div>
+        <button
+          onClick={() => router.push("/lecturer/courses")}
+          className="mt-6 flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-indigo-600 transition-colors"
+        >
+          <ArrowLeft className="size-4" /> Back to courses
+        </button>
+      </div>
+    );
   }
 
   return (
-    <div className="space-y-6">
-      <Button variant="ghost" size="sm" className="-ml-2" onClick={() => router.push("/lecturer/courses")}>
-        <ArrowLeft className="size-4" />
-        Back to my courses
-      </Button>
+    <div className="space-y-6 max-w-4xl mx-auto pb-10">
+      <button
+        onClick={() => router.push("/lecturer/courses")}
+        className="flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+      >
+        <ArrowLeft className="size-4" /> Back to courses
+      </button>
 
-      <PageHeader
-        title={`${course.code} — ${course.title}`}
-        description={`${course.level} Level · ${course.semester}`}
-        action={
-          <Badge variant="secondary" className="gap-1">
-            <Users className="size-3" />
-            {course.studentIds.length} students
-          </Badge>
-        }
+      <CourseHeader
+        code={course.code}
+        title={course.title}
+        enrolledCount={course.enrolled_count}
       />
 
-      <Card className="max-w-2xl">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-base">
-            <CalendarClock className="size-4 text-primary" />
-            Start Attendance Session
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label>Course</Label>
-              <Input value={course.code} disabled />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="date">Date</Label>
-              <Input id="date" value={form.date} onChange={(e) => update("date", e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="start">Start Time</Label>
-              <Input id="start" value={form.startTime} onChange={(e) => update("startTime", e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="end">End Time</Label>
-              <Input id="end" value={form.endTime} onChange={(e) => update("endTime", e.target.value)} />
-            </div>
-            <div className="space-y-2 sm:col-span-2">
-              <Label htmlFor="venue">
-                <MapPin className="mr-1 inline size-3.5" />
-                Venue
-              </Label>
-              <Input id="venue" value={form.venue} onChange={(e) => update("venue", e.target.value)} />
-            </div>
+      {/* Conditionally render the Active Session Banner OR the Setup Form */}
+      {isSessionActive ? (
+        <div className="rounded-2xl border border-indigo-200 bg-indigo-50/50 p-8 text-center shadow-sm dark:border-indigo-900/50 dark:bg-indigo-900/10">
+          <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400">
+            <Radio className="size-6 animate-pulse" />
           </div>
-          <Button onClick={startSession} disabled={starting} className="w-full sm:w-auto">
-            {starting ? <Loader2 className="size-4 animate-spin" /> : <Play className="size-4" />}
-            Start Attendance Session
-          </Button>
-        </CardContent>
-      </Card>
+          <h3 className="mb-2 text-xl font-bold text-indigo-900 dark:text-indigo-100">
+            Session is currently active
+          </h3>
+          <p className="mb-8 text-sm text-indigo-700/80 dark:text-indigo-300 max-w-md mx-auto">
+            You have an ongoing attendance session for this course today. You
+            can resume scanning or end the session to close attendance.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button
+              onClick={() =>
+                router.push(`/lecturer/courses/${course?.id}/attendance`)
+              }
+              className="w-full sm:w-auto rounded-lg bg-indigo-600 px-8 py-3 text-sm font-bold text-white hover:bg-indigo-700 transition-colors shadow-sm"
+            >
+              Resume Scanner
+            </button>
+            <button
+              onClick={endSession}
+              disabled={ending}
+              className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-white px-8 py-3 text-sm font-bold text-red-600 hover:bg-red-50 dark:border-red-900/50 dark:bg-slate-900 dark:text-red-400 dark:hover:bg-red-900/20 transition-colors"
+            >
+              {ending ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                "End Session"
+              )}
+            </button>
+          </div>
+        </div>
+      ) : (
+        <SessionSetupForm
+          form={form}
+          onUpdate={updateForm}
+          onStart={startSession}
+          isStarting={starting}
+        />
+      )}
     </div>
-  )
+  );
 }

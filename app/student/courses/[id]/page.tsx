@@ -27,10 +27,8 @@ export default function StudentCourseDetail({
 
   const [selectedReceipt, setSelectedReceipt] = useState<any | null>(null);
 
-  // 1. Hook MUST be inside the component
   const { courses, isLoading, isError } = useStudentAttendance();
 
-  // 2. Handle Loading State FIRST
   if (isLoading) {
     return (
       <div className="space-y-6">
@@ -44,7 +42,6 @@ export default function StudentCourseDetail({
     );
   }
 
-  // 3. Handle Error State
   if (isError) {
     return (
       <div className="space-y-6">
@@ -56,10 +53,8 @@ export default function StudentCourseDetail({
     );
   }
 
-  // 4. Safely find the specific course now that data is guaranteed to be loaded
   const course = courses?.find((c: any) => c.id === id);
 
-  // 5. Handle case where the ID in the URL doesn't match any enrolled course
   if (!course) {
     return (
       <div className="space-y-6">
@@ -81,7 +76,6 @@ export default function StudentCourseDetail({
     );
   }
 
-  // 6. Safe Math calculations
   const absent = Math.max(0, course.total - course.present);
   const pct =
     course.total > 0 ? Math.round((course.present / course.total) * 100) : 0;

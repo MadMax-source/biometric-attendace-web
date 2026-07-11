@@ -26,8 +26,6 @@ export default function StudentDashboard() {
   // --- FETCH LIVE DATA ---
   const { courses, isLoading, isError } = useStudentAttendance();
 
-  // NOTE: You will eventually want to fetch 'isEnrolled' from your user profile API.
-  // For now, it is safely defaulted to false so the user sees the enrollment prompt.
   const [isEnrolled, setIsEnrolled] = useState(false);
 
   // --- HANDLE LOADING & ERROR STATES ---
@@ -91,7 +89,6 @@ export default function StudentDashboard() {
       ? Math.round((monthClassesAttended / monthTotalClasses) * 100)
       : 0;
 
-  // Package it all into a single object to pass to the cards
   const stats: DashboardStats = {
     totalCourses,
     overallPercentage,
@@ -182,7 +179,7 @@ function ChartCard() {
   );
 }
 
-// 2. Updated StatCards to accept the live 'stats' object
+//  Updated StatCards to accept the live 'stats' object
 function StatCards({
   stacked,
   stats,

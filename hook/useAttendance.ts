@@ -18,6 +18,6 @@ export function useStudentAttendance() {
     courses: data?.data || [],
     isLoading,
     isError: error,
-    refresh: mutate, // to refresh the data manually if needed
+    refresh: mutate,
   };
 }
