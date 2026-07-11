@@ -7,10 +7,12 @@ import { PageHeader, StatCard } from "@/components/widgets";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/lib/auth-context";
 
 const LECTURER = "Dr. D. Maliki";
 
 export default function LecturerDashboard() {
+  const { user, loading } = useAuth();
   const myCourses = courses.filter((c) => c.lecturer === LECTURER);
   const myCourseIds = myCourses.map((c) => c.id);
   const todaySessions = sessions.filter((s) =>
@@ -24,7 +26,7 @@ export default function LecturerDashboard() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title={`Welcome, ${LECTURER}`}
+        title={`Welcome, ${user?.fullName}`}
         description="Your teaching activity today."
       />
 
