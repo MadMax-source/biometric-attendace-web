@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 import BACKENDAPI from "@/API";
 import ProfileCard from "@/components/profile";
-import CourseGrid, { Course } from "@/components/profile/coursegrid";
-import RegistrationFAB from "@/components/profile/registrationFab";
+import CourseGrid, { Course } from "@/components/studentProfile/coursegrid";
+import RegistrationFAB from "@/components/studentProfile/registrationFab";
 import { toast } from "sonner";
 
 type ProfilePayload = {
