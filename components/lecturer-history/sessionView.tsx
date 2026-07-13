@@ -1,5 +1,7 @@
-import { useState } from "react";
-import { BookOpen } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
+import { BookOpen, Loader2, XCircle } from "lucide-react";
+import { useAttendanceHistory } from "@/hook/useAttendanceHistory";
+
 import SemesterOverviewCard from "./semesterOverView";
 import SessionControls from "./sessionControl";
 import AttendanceStats from "./attendanceStat";
@@ -11,113 +13,82 @@ interface SessionViewProps {
 
 export default function SessionView({ selectedCourse }: SessionViewProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedDate, setSelectedDate] = useState<string>("");
 
-  // MOCK DATA (Will be replaced by API later)
+  const { semesterData, isLoading, isError } =
+    useAttendanceHistory(selectedCourse);
 
-  const mockSessions = [
-    {
-      id: "1",
-      date: "2026-07-10",
-      time: "10:00 AM - 12:00 PM",
-      present: 45,
-      total: 50,
-    },
-    {
-      id: "2",
-      date: "2026-07-05",
-      time: "10:00 AM - 12:00 PM",
-      present: 48,
-      total: 50,
-    },
-  ];
+  // Extract and Sort Dates Dynamically
+  const allDates = useMemo(() => {
+    return Array.from(
+      new Set(
+        semesterData.flatMap((student) =>
+          Object.keys(student.attendance || {}),
+        ),
+      ),
+    ).sort();
+  }, [semesterData]);
 
-  const mockAttendanceData = [
-    {
-      id: "1",
-      name: "Salam Sodiq",
-      matric: "ENG/21/001",
-      status: "Present",
-      timeIn: "10:05 AM",
-    },
-    {
-      id: "2",
-      name: "John Doe",
-      matric: "ENG/21/002",
-      status: "Absent",
-      timeIn: "-",
-    },
-    {
-      id: "3",
-      name: "Jane Smith",
-      matric: "ENG/21/003",
-      status: "Present",
-      timeIn: "10:12 AM",
-    },
-  ];
+  //  Auto-select the latest date when data loads
+  useEffect(() => {
+    if (allDates.length > 0 && !allDates.includes(selectedDate)) {
+      setSelectedDate(allDates[allDates.length - 1]);
+    } else if (allDates.length === 0) {
+      setSelectedDate("");
+    }
+  }, [allDates, selectedDate]);
 
-  const mockSemesterData = [
-    {
-      matric: "ENG/21/001",
-      name: "Salam Sodiq",
-      attendance: {
-        "2026-07-05": "Present",
-        "2026-07-10": "Present",
-        "2026-07-17": "Present",
-      },
-    },
-    {
-      matric: "ENG/21/002",
-      name: "John Doe",
-      attendance: {
-        "2026-07-05": "Absent",
-        "2026-07-10": "Present",
-        "2026-07-17": "Absent",
-      },
-    },
-    {
-      matric: "ENG/21/003",
-      name: "Jane Smith",
-      attendance: {
-        "2026-07-05": "Present",
-        "2026-07-10": "Absent",
-        "2026-07-17": "Present",
-      },
-    },
-  ];
+  // Format Daily Table Data
+  const dailyTableData = useMemo(() => {
+    return semesterData.map((student) => {
+      const status = student.attendance?.[selectedDate] || "Absent";
+      return {
+        id: student.id,
+        matric: student.matric,
+        name: student.name,
+        status: status,
+        timeIn: status === "Present" ? "Scanned" : "-",
+      };
+    });
+  }, [semesterData, selectedDate]);
+
+  const presentCount = dailyTableData.filter(
+    (s) => s.status === "Present",
+  ).length;
+  const absentCount = dailyTableData.length - presentCount;
 
   // EXPORT LOGIC
   const handleExportSingleSessionCSV = () => {
+    if (!selectedDate) return;
     const headers = ["Matric Number,Student Name,Status,Time In\n"];
-    const rows = mockAttendanceData.map(
+    const rows = dailyTableData.map(
       (s) => `${s.matric},${s.name},${s.status},${s.timeIn}\n`,
     );
     triggerDownload(
       headers.concat(rows).join(""),
-      `Daily_RollCall_${selectedCourse}.csv`,
+      `Daily_RollCall_${selectedDate}.csv`,
     );
   };
 
   const handleExportMasterCSV = () => {
-    const allDates = ["2026-07-05", "2026-07-10", "2026-07-17"];
+    if (allDates.length === 0) return;
     const totalClasses = allDates.length;
     const headers = `Matric Number,Student Name,Total Classes,Classes Attended,Attendance %,${allDates.join(",")}\n`;
 
-    const rows = mockSemesterData.map((student) => {
-      let presentCount = 0;
+    const rows = semesterData.map((student) => {
+      let attendedCount = 0;
       const dateStatuses = allDates.map((date) => {
-        const status =
-          student.attendance[date as keyof typeof student.attendance] ||
-          "Absent";
-        if (status === "Present") presentCount++;
+        const status = student.attendance?.[date] || "Absent";
+        if (status === "Present") attendedCount++;
         return status;
       });
-      const percentage = Math.round((presentCount / totalClasses) * 100);
-      return `${student.matric},${student.name},${totalClasses},${presentCount},${percentage}%,${dateStatuses.join(",")}\n`;
+      const percentage = Math.round((attendedCount / totalClasses) * 100);
+      return `${student.matric},${student.name},${totalClasses},${attendedCount},${percentage}%,${dateStatuses.join(",")}\n`;
     });
 
     triggerDownload(
       headers + rows.join(""),
-      `Master_Semester_Report_${selectedCourse}.csv`,
+      `Semester_Report_${selectedCourse}.csv`,
     );
   };
 
@@ -147,11 +118,33 @@ export default function SessionView({ selectedCourse }: SessionViewProps) {
     );
   }
 
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 h-full">
+        <Loader2 className="size-8 animate-spin text-indigo-600 mb-4" />
+        <p className="text-sm font-bold text-slate-500">
+          Loading attendance data...
+        </p>
+      </div>
+    );
+  }
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 h-full text-center">
+        <XCircle className="size-10 text-rose-500 mb-4" />
+        <p className="text-lg font-bold text-rose-600">Failed to load data</p>
+        <p className="text-sm text-slate-500 mt-2">
+          The Express backend returned an error. Check your terminal!
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-8">
       <SemesterOverviewCard
-        totalSessions={3}
-        totalStudents={50}
+        totalSessions={allDates.length}
+        totalStudents={semesterData.length}
         onExportMaster={handleExportMasterCSV}
       />
 
@@ -164,17 +157,19 @@ export default function SessionView({ selectedCourse }: SessionViewProps) {
       </div>
 
       <SessionControls
-        sessions={mockSessions}
+        sessions={allDates}
+        selectedSession={selectedDate}
+        onSessionChange={setSelectedDate}
         onExportSession={handleExportSingleSessionCSV}
       />
 
-      <AttendanceStats presentCount={45} absentCount={5} />
+      <AttendanceStats presentCount={presentCount} absentCount={absentCount} />
 
       <AttendanceTable
-        attendanceData={mockAttendanceData}
+        attendanceData={dailyTableData}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        totalEnrolled={50}
+        totalEnrolled={semesterData.length}
       />
     </div>
   );

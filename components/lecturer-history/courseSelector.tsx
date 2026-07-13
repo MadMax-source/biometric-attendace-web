@@ -1,5 +1,5 @@
 import { BookOpen } from "lucide-react";
-
+import { useAuth } from "@/lib/auth-context";
 interface CourseSelectorProps {
   courses: any[];
   isLoading: boolean;
@@ -13,13 +13,14 @@ export default function CourseSelector({
   selectedCourse,
   onSelectCourse,
 }: CourseSelectorProps) {
+  const { loading } = useAuth();
+
   return (
     <div className="flex flex-col gap-4 rounded-2xl bg-white dark:bg-slate-900 p-6 shadow-sm border border-slate-100 dark:border-slate-800">
       <h2 className="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2 mb-2">
         <BookOpen className="size-4 text-indigo-500" /> Select Course
       </h2>
-
-      {isLoading ? (
+      {loading || (isLoading && courses.length === 0) ? (
         <div className="text-sm text-slate-500">Loading courses...</div>
       ) : (
         <div className="flex flex-col gap-2">

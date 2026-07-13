@@ -4,8 +4,10 @@ import { useState } from "react";
 import { useLecturerDashboard } from "@/hook/useLecturerDashboard";
 import CourseSelector from "@/components/lecturer-history/courseSelector";
 import SessionView from "@/components/lecturer-history/sessionView";
+import { useAuth } from "@/lib/auth-context";
 
 export default function AttendanceHistoryPage() {
+  const { loading } = useAuth();
   const { courses, isLoading: coursesLoading } = useLecturerDashboard();
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
 
