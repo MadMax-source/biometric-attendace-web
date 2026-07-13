@@ -64,7 +64,7 @@ export function DashboardStats({ stats }: { stats: StatsProps }) {
         </p>
       </div>
 
-      {/* Stat 4: Active Scanners (Hardware Themed) */}
+      {/* Stat Active Scanners (Hardware Themed) */}
       <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-700 p-5 shadow-lg hover:-translate-y-1 transition-all duration-300">
         <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity group-hover:scale-110 duration-500 text-white">
           <Fingerprint className="size-16" />
