@@ -9,7 +9,7 @@ import BACKENDAPI from "@/API";
 import RegistrationHeader from "@/components/registration/registrationHeader";
 import RegistrationFormFields from "@/components/registration/registrationFormField";
 
-type RegistrationMode = "student" | "lecturer";
+type RegistrationMode = "admin" | "student" | "lecturer";
 
 export function RegisterStudentForm({
   backHref,

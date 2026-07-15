@@ -1,6 +1,6 @@
 import React from "react";
 
-type RegistrationMode = "student" | "lecturer";
+type RegistrationMode = "admin" | "student" | "lecturer";
 
 interface RegistrationHeaderProps {
   mode: RegistrationMode;

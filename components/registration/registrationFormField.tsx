@@ -13,7 +13,7 @@ import {
 const DEPARTMENTS = ["Computer Engineering"];
 
 interface RegistrationFormFieldsProps {
-  mode: "student" | "lecturer";
+  mode: "admin" | "student" | "lecturer";
   formData: any;
   updateField: (field: string, value: string) => void;
 }

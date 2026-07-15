@@ -33,7 +33,7 @@ export default function LoginPage() {
     const isMobile = window.matchMedia("(max-width: 767px)").matches;
     if (isMobile && !hasTriggeredSplash.current) {
       hasTriggeredSplash.current = true;
-      const timer = setTimeout(() => setShowMobileSplash(false), 7000);
+      const timer = setTimeout(() => setShowMobileSplash(false), 5000);
       return () => clearTimeout(timer);
     } else {
       setShowMobileSplash(false);
@@ -43,6 +43,7 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
+
     try {
       const response = await BACKENDAPI.post("/login", {
         email,

@@ -21,6 +21,8 @@ export type Student = {
   department: string;
   faceRegistered: boolean;
   fingerprintRegistered: boolean;
+  profile_Image?: string;
+  enrolled: boolean;
 };
 
 export type Course = {
@@ -85,6 +87,8 @@ export const students: Student[] = [
     department: "Computer Engineering",
     faceRegistered: true,
     fingerprintRegistered: true,
+    profile_Image: "https://randomuser.me/api/portraits/men/1.jpg",
+    enrolled: true,
   },
   {
     id: "s2",
@@ -94,6 +98,8 @@ export const students: Student[] = [
     department: "Computer Engineering",
     faceRegistered: true,
     fingerprintRegistered: false,
+    profile_Image: undefined,
+    enrolled: true,
   },
   {
     id: "s3",
@@ -103,6 +109,8 @@ export const students: Student[] = [
     department: "Computer Engineering",
     faceRegistered: true,
     fingerprintRegistered: true,
+    profile_Image: "https://randomuser.me/api/portraits/men/2.jpg",
+    enrolled: true,
   },
   {
     id: "s4",
@@ -112,6 +120,8 @@ export const students: Student[] = [
     department: "Computer Engineering",
     faceRegistered: false,
     fingerprintRegistered: true,
+    profile_Image: undefined,
+    enrolled: true,
   },
   {
     id: "s5",
@@ -121,6 +131,8 @@ export const students: Student[] = [
     department: "Computer Engineering",
     faceRegistered: true,
     fingerprintRegistered: true,
+    profile_Image: "https://randomuser.me/api/portraits",
+    enrolled: true,
   },
   {
     id: "s6",
@@ -130,6 +142,8 @@ export const students: Student[] = [
     department: "Computer Engineering",
     faceRegistered: true,
     fingerprintRegistered: true,
+    profile_Image: "https://randomuser.me/api/portraits/women/3.jpg",
+    enrolled: true,
   },
   {
     id: "s7",
@@ -139,6 +153,8 @@ export const students: Student[] = [
     department: "Computer Engineering",
     faceRegistered: false,
     fingerprintRegistered: false,
+    profile_Image: undefined,
+    enrolled: true,
   },
   {
     id: "s8",
@@ -148,6 +164,8 @@ export const students: Student[] = [
     department: "Computer Engineering",
     faceRegistered: true,
     fingerprintRegistered: true,
+    profile_Image: "https://randomuser.me/api/portraits/women/4.jpg",
+    enrolled: true,
   },
 ];
 
