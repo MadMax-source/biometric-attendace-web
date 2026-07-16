@@ -6,146 +6,125 @@ import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/widgets";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import BACKENDAPI from "@/API";
+import { useLecturer } from "@/hook/useLecturer";
+import { CourseDetails } from "@/components/admin/courseDetail";
+import { LecturerAssignment } from "@/components/admin/lecturerAssignment";
 
-const LECTURERS = [
-  "Dr. D. Maliki",
-  "Engr. A. Bala",
-  "Prof. K. Usman",
-  "Dr. R. Adamu",
-];
+export interface CourseFormState {
+  code: string;
+  title: string;
+  level: string;
+  semester: string;
+  credits: string;
+  lecturerId: string;
+}
 
 export default function CreateCoursePage() {
   const router = useRouter();
-  const [form, setForm] = useState({
+  const { lecturerLists, isLoading: isLoadingLecturers } = useLecturer();
+  const [saving, setSaving] = useState(false);
+
+  const [form, setForm] = useState<CourseFormState>({
     code: "",
     title: "",
     level: "",
     semester: "",
-    lecturer: "",
+    credits: "3",
+    lecturerId: "unassigned",
   });
-  const [saving, setSaving] = useState(false);
 
-  function update(key: keyof typeof form, value: string | null) {
-    setForm((f) => ({ ...f, [key]: value }));
+  function update(key: keyof CourseFormState, value: string | null) {
+    const safeValue = value || "";
+    const finalValue = key === "code" ? safeValue.toUpperCase() : safeValue;
+    setForm((f) => ({ ...f, [key]: finalValue }));
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (Object.values(form).some((v) => !v)) {
-      toast.error("Fill in all fields");
+    setSaving(true);
+
+    if (
+      !form.code ||
+      !form.title ||
+      !form.level ||
+      !form.semester ||
+      !form.credits
+    ) {
+      toast.error("Please fill in all required course details");
+      setSaving(false);
       return;
     }
-    setSaving(true);
-    setTimeout(() => {
-      toast.success("Course created", {
-        description: `${form.code} — ${form.title}`,
+
+    try {
+      const response = await BACKENDAPI.post("/createCourse", {
+        course_code: form.code,
+        title: form.title,
+        level: form.level,
+        credits: Number(form.credits),
+        semester: form.semester,
+        lecturerId: form.lecturerId,
       });
-      router.push("/admin/courses");
-    }, 800);
+
+      if (response.status == 200) {
+        toast.success("Course created successfully!");
+        router.push("/admin/courses");
+      }
+    } catch {
+      console.error("Failed to create course");
+      toast.error("Failed to create course");
+      setSaving(false);
+    }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto max-w-2xl space-y-6">
+    <div className="mx-auto max-w-3xl space-y-8 pb-10">
       <PageHeader
         title="Create Course"
-        description="Add a new course to the department catalog."
+        description="Add a new course to the department catalog and assign personnel."
       />
-      <Card>
-        <CardContent className="grid gap-4 p-6 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="code">Course Code</Label>
-            <Input
-              id="code"
-              placeholder="CPE121"
-              value={form.code}
-              onChange={(e) => update("code", e.target.value)}
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <Card className="border-t-4 border-t-[#0c2a5d] shadow-md overflow-hidden ring-1 ring-border/50 border-x-0 border-b-0">
+          <div className="bg-[#0c2a5d] px-6 py-4">
+            <h2 className="text-lg font-semibold text-white tracking-tight">
+              Course Information
+            </h2>
+          </div>
+
+          <CardContent className="p-0">
+            <CourseDetails form={form} update={update} />
+            <Separator />
+            <LecturerAssignment
+              form={form}
+              update={update}
+              lecturerLists={lecturerLists}
+              isLoadingLecturers={isLoadingLecturers}
             />
-          </div>
-          <div className="space-y-2 sm:col-span-1">
-            <Label>Level</Label>
-            <Select
-              value={form.level}
-              onValueChange={(v) => update("level", v)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select level" />
-              </SelectTrigger>
-              <SelectContent>
-                {["100", "200", "300", "400", "500"].map((l) => (
-                  <SelectItem key={l} value={l}>
-                    {l} Level
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2 sm:col-span-2">
-            <Label htmlFor="title">Course Title</Label>
-            <Input
-              id="title"
-              placeholder="Introduction to Computer Engineering"
-              value={form.title}
-              onChange={(e) => update("title", e.target.value)}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>Semester</Label>
-            <Select
-              value={form.semester}
-              onValueChange={(v) => update("semester", v)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select semester" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="First Semester">First Semester</SelectItem>
-                <SelectItem value="Second Semester">Second Semester</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label>Lecturer</Label>
-            <Select
-              value={form.lecturer}
-              onValueChange={(v) => update("lecturer", v)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Assign lecturer" />
-              </SelectTrigger>
-              <SelectContent>
-                {LECTURERS.map((l) => (
-                  <SelectItem key={l} value={l}>
-                    {l}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
-      <div className="flex justify-end gap-3">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => router.push("/admin/courses")}
-        >
-          Cancel
-        </Button>
-        <Button type="submit" disabled={saving}>
-          {saving && <Loader2 className="size-4 animate-spin" />}
-          Save Course
-        </Button>
-      </div>
-    </form>
+          </CardContent>
+        </Card>
+
+        <div className="flex justify-end gap-4 pt-2">
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full sm:w-auto"
+            onClick={() => router.push("/admin/courses")}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            disabled={saving}
+            className="w-full sm:w-auto min-w-[140px] bg-[#0c2a5d] hover:bg-[#0c2a5d]/90 text-white"
+          >
+            {saving ? <Loader2 className="size-4 mr-2 animate-spin" /> : null}
+            {saving ? "Saving..." : "Save Course"}
+          </Button>
+        </div>
+      </form>
+    </div>
   );
 }

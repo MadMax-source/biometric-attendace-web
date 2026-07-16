@@ -60,7 +60,8 @@ export default function PendingEnrollmentCard({
           >
             {isEnrolling ? (
               <>
-                <Loader2 className="size-4 animate-spin" /> Waking Scanner...
+                <Loader2 className="size-4 animate-spin" />
+                Enrolling...
               </>
             ) : (
               <>

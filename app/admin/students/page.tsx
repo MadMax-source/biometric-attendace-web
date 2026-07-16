@@ -10,6 +10,7 @@ import {
   Loader2,
   AlertTriangle,
 } from "lucide-react";
+import BACKENDAPI from "@/API";
 
 import StudentListHeader from "@/components/admin/studentListHeader";
 import PendingEnrollmentCard from "@/components/admin/pendingEnrollmentCard";
@@ -22,13 +23,24 @@ export default function StudentsPage() {
   const { studentLists, isLoading, isError } = useStudents();
 
   //this is for enrollment i will link it with backeend later
-  const handleTriggerEnrollment = async (studentId: string, matric: string) => {
+
+  const handleTriggerEnrollment = async (
+    studentId: string,
+    matricNumber: string,
+  ) => {
     setEnrollingId(studentId);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      alert(`Hardware activated! Scanner is now ready for ${matric}.`);
+      const response = await BACKENDAPI.post(`/enrollment`, {
+        studentId,
+        matricNumber,
+      });
+      if (response.status === 200) {
+        console.log("Enrollment successful for student:", studentId);
+      } else {
+        console.error("Enrollment failed:", response.data);
+      }
     } catch (error) {
-      console.error("Failed to wake up hardware", error);
+      console.error("Failed to trigger enrollment:", error);
     } finally {
       setEnrollingId(null);
     }
