@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { Plus, Search } from "lucide-react";
 

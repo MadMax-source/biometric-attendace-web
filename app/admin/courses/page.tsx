@@ -1,59 +1,61 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { BookOpen, Plus, UserPlus, Users } from "lucide-react"
-import { courses } from "@/lib/mock-data"
-import { PageHeader } from "@/components/widgets"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Plus, BookOpen } from "lucide-react";
+import { PageHeader } from "@/components/widgets";
+import { Button } from "@/components/ui/button";
+import { SearchInput } from "@/components/admin/searchbar";
+import { useCourses } from "@/hook/usecourse";
+import { CourseCard } from "@/components/admin/coursecard";
+import { CourseSkeleton } from "@/components/admin/skeletonCard";
 
 export default function CoursesPage() {
+  const router = useRouter();
+  const { courses, isLoading, refresh } = useCourses();
+  const [search, setSearch] = useState("");
+
+  // Filter logic: This checks if the code or title matches the search text
+  const filteredCourses = courses.filter(
+    (c: any) =>
+      c.course_code.toLowerCase().includes(search.toLowerCase()) ||
+      c.title.toLowerCase().includes(search.toLowerCase()),
+  );
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-10">
       <PageHeader
-        title="Courses"
-        description={`${courses.length} courses this session`}
+        title="Courses Overview"
+        description={`${filteredCourses.length} courses match your search`}
         action={
-          <Button asChild>
-            <Link href="/admin/courses/create">
-              <Plus className="size-4" />
-              Create Course
-            </Link>
+          <Button
+            className="bg-[#0c2a5d] hover:bg-[#0c2a5d]/90 text-white"
+            onClick={() => router.push("/admin/courses/create")}
+          >
+            <Plus className="size-4 mr-2" />
+            Create Course
           </Button>
         }
       />
 
+      {/* SEARCH COMPONENT AT THE TOP */}
+      <SearchInput value={search} onChange={setSearch} />
+
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {courses.map((c) => (
-          <Card key={c.id} className="flex flex-col">
-            <CardContent className="flex flex-1 flex-col gap-4 p-5">
-              <div className="flex items-start justify-between">
-                <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                  <BookOpen className="size-5" />
-                </div>
-                <Badge variant="secondary">{c.level} Level</Badge>
-              </div>
-              <div className="space-y-1">
-                <p className="font-semibold text-primary">{c.code}</p>
-                <p className="text-sm text-muted-foreground leading-relaxed">{c.title}</p>
-              </div>
-              <div className="mt-auto flex items-center justify-between border-t pt-3 text-sm">
-                <span className="flex items-center gap-1.5 text-muted-foreground">
-                  <Users className="size-4" />
-                  {c.studentIds.length} enrolled
-                </span>
-                <Button asChild variant="ghost" size="sm">
-                  <Link href={`/admin/courses/${c.id}`}>
-                    <UserPlus className="size-4" />
-                    Manage
-                  </Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+        {isLoading ? (
+          Array.from({ length: 6 }).map((_, i) => <CourseSkeleton key={i} />)
+        ) : filteredCourses.length === 0 ? (
+          <div className="col-span-full py-20 text-center">
+            <p className="text-muted-foreground">
+              No courses found matching "{search}"
+            </p>
+          </div>
+        ) : (
+          filteredCourses.map((course: any) => (
+            <CourseCard key={course.id} course={course} refresh={refresh} />
+          ))
+        )}
       </div>
     </div>
-  )
+  );
 }
