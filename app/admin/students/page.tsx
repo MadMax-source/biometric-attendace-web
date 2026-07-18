@@ -48,13 +48,13 @@ export default function StudentsPage() {
 
   if (isLoading) {
     return (
-      <div className="relative min-h-[80vh] w-full p-8 rounded-3xl bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-blue-400/20 rounded-full blur-3xl animate-pulse"></div>
-        <Loader2 className="size-12 animate-spin text-blue-950 dark:text-blue-400 mb-4 relative z-10" />
-        <p className="text-lg font-bold text-blue-950 dark:text-white relative z-10">
+      <div className="relative min-h-[80vh] w-full p-8 rounded-3xl bg-[#f2f2f2] dark:bg-[#041024] flex flex-col items-center justify-center">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[#a9c8f4]/20 rounded-full blur-3xl animate-pulse"></div>
+        <Loader2 className="size-12 animate-spin text-[#0a2f66] dark:text-[#8ba3c7] mb-4 relative z-10" />
+        <p className="text-lg font-bold text-[#0a2f66] dark:text-white relative z-10">
           loading students...
         </p>
-        <p className="text-sm text-slate-500 relative z-10">
+        <p className="text-sm text-[#6b6b6b] dark:text-[#8ba3c7] relative z-10">
           Retrieving enrollment records
         </p>
       </div>
@@ -63,15 +63,15 @@ export default function StudentsPage() {
 
   if (isError) {
     return (
-      <div className="relative min-h-[80vh] w-full p-8 rounded-3xl bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center text-center">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-rose-400/10 rounded-full blur-3xl"></div>
-        <div className="p-4 bg-rose-100 dark:bg-rose-900/30 rounded-full mb-4 relative z-10">
-          <AlertTriangle className="size-10 text-rose-600 dark:text-rose-400" />
+      <div className="relative min-h-[80vh] w-full p-8 rounded-3xl bg-[#f2f2f2] dark:bg-[#041024] flex flex-col items-center justify-center text-center">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-red-400/10 rounded-full blur-3xl"></div>
+        <div className="p-4 bg-[#fff5eb] dark:bg-[#1a365d] rounded-full mb-4 relative z-10">
+          <AlertTriangle className="size-10 text-[#e65a5a]" />
         </div>
-        <p className="text-xl font-bold text-slate-900 dark:text-white relative z-10">
+        <p className="text-xl font-bold text-[#0a2f66] dark:text-white relative z-10">
           Connection Error
         </p>
-        <p className="text-sm text-slate-500 mt-2 max-w-sm relative z-10">
+        <p className="text-sm text-[#6b6b6b] dark:text-[#8ba3c7] mt-2 max-w-sm relative z-10">
           {isError instanceof Error
             ? isError.message
             : "An unexpected error occurred."}
@@ -92,9 +92,9 @@ export default function StudentsPage() {
   const enrolledStudents = searchedStudents.filter((s: Students) => s.enrolled);
 
   return (
-    <div className="relative min-h-[80vh] w-full p-4 sm:p-8 rounded-3xl overflow-hidden bg-slate-50 dark:bg-slate-950">
-      <div className="absolute -top-20 -left-20 w-96 h-96 bg-blue-200/40 dark:bg-blue-900/20 rounded-full mix-blend-multiply filter blur-3xl opacity-60"></div>
-      <div className="absolute top-40 -right-20 w-96 h-96 bg-slate-300/40 dark:bg-slate-800/20 rounded-full mix-blend-multiply filter blur-3xl opacity-50"></div>
+    <div className="relative min-h-[80vh] w-full p-4 sm:p-8 rounded-3xl overflow-hidden bg-[#f2f2f2] dark:bg-[#041024]">
+      <div className="absolute -top-20 -left-20 w-96 h-96 bg-[#a9c8f4]/40 dark:bg-[#1a4b96]/20 rounded-full mix-blend-multiply filter blur-3xl opacity-60"></div>
+      <div className="absolute top-40 -right-20 w-96 h-96 bg-[#d9e3f6]/40 dark:bg-[#1a365d]/40 rounded-full mix-blend-multiply filter blur-3xl opacity-50"></div>
 
       <div className="relative z-10 space-y-8 max-w-5xl mx-auto">
         <StudentListHeader
@@ -106,12 +106,12 @@ export default function StudentsPage() {
         {pendingStudents.length > 0 && (
           <section className="space-y-5 mt-10">
             <div className="flex items-center gap-4">
-              <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1"></div>
-              <span className="text-xs font-black text-rose-600 uppercase tracking-widest flex items-center gap-2">
+              <div className="h-px bg-[#d9e3f6] dark:bg-[#1a365d] flex-1"></div>
+              <span className="text-xs font-black text-[#e65a5a] uppercase tracking-widest flex items-center gap-2">
                 <XCircle className="size-4" /> Pending Biometrics (
                 {pendingStudents.length})
               </span>
-              <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1"></div>
+              <div className="h-px bg-[#d9e3f6] dark:bg-[#1a365d] flex-1"></div>
             </div>
 
             <div className="grid gap-4">
@@ -130,23 +130,23 @@ export default function StudentsPage() {
         {enrolledStudents.length > 0 && (
           <section className="space-y-5 pt-8">
             <div className="flex items-center gap-4">
-              <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1"></div>
-              <span className="text-xs font-black text-blue-950 dark:text-blue-400 uppercase tracking-widest flex items-center gap-2">
+              <div className="h-px bg-[#d9e3f6] dark:bg-[#1a365d] flex-1"></div>
+              <span className="text-xs font-black text-[#0a2f66] dark:text-[#8ba3c7] uppercase tracking-widest flex items-center gap-2">
                 <CheckCircle2 className="size-4" /> Enrollment Complete (
                 {enrolledStudents.length})
               </span>
-              <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1"></div>
+              <div className="h-px bg-[#d9e3f6] dark:bg-[#1a365d] flex-1"></div>
             </div>
 
             <div className="grid gap-3 opacity-90 hover:opacity-100 transition-opacity">
               {enrolledStudents.map((s: Students) => (
                 <div
                   key={s.id}
-                  className="flex items-center justify-between p-4 rounded-xl bg-white/60 dark:bg-slate-900/40 backdrop-blur-sm border border-slate-200 dark:border-slate-800 shadow-sm"
+                  className="flex items-center justify-between p-4 rounded-xl bg-white/60 dark:bg-[#0a1c3a]/40 backdrop-blur-sm border border-[#d9e3f6] dark:border-[#1a365d] shadow-sm"
                 >
                   <div className="flex items-center gap-4">
                     {/* Small Profile Image / Initials Fallback */}
-                    <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800 text-blue-950 dark:text-blue-400 font-bold text-sm overflow-hidden">
+                    <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[#f2f2f2] dark:bg-[#1a4b96]/30 border border-[#d9e3f6] dark:border-[#1a365d] text-[#0a2f66] dark:text-[#8ba3c7] font-bold text-sm overflow-hidden">
                       {s.profile_image ? (
                         <img
                           src={s.profile_image}
@@ -163,19 +163,19 @@ export default function StudentsPage() {
                     </div>
 
                     <div>
-                      <p className="font-bold text-blue-950 dark:text-slate-200 text-sm">
+                      <p className="font-bold text-[#0a2f66] dark:text-white text-sm">
                         {s.full_name}
                       </p>
-                      <p className="text-xs font-semibold text-slate-500 mt-0.5">
+                      <p className="text-xs font-semibold text-[#6b6b6b] dark:text-[#8ba3c7] mt-0.5">
                         {s.matric_number} • {s.level}L • {s.department}
                       </p>
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <span className="px-2.5 py-1 rounded-md text-[10px] font-bold bg-emerald-50 text-emerald-700 flex items-center gap-1 border border-emerald-100">
+                    <span className="px-2.5 py-1 rounded-md text-[10px] font-bold bg-[#eafff0] dark:bg-[#1a365d] text-emerald-700 dark:text-emerald-400 flex items-center gap-1 border border-emerald-200 dark:border-[#1a365d]">
                       <ScanFace className="size-3" /> Face
                     </span>
-                    <span className="px-2.5 py-1 rounded-md text-[10px] font-bold bg-emerald-50 text-emerald-700 flex items-center gap-1 border border-emerald-100">
+                    <span className="px-2.5 py-1 rounded-md text-[10px] font-bold bg-[#eafff0] dark:bg-[#1a365d] text-emerald-700 dark:text-emerald-400 flex items-center gap-1 border border-emerald-200 dark:border-[#1a365d]">
                       <Fingerprint className="size-3" /> Print
                     </span>
                   </div>
@@ -186,9 +186,9 @@ export default function StudentsPage() {
         )}
 
         {searchedStudents.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-20 text-center border-2 border-dashed border-slate-300 dark:border-slate-800 rounded-2xl bg-white/50 backdrop-blur-sm">
-            <Database className="size-10 text-slate-300 mb-3" />
-            <p className="text-lg font-bold text-slate-500">
+          <div className="flex flex-col items-center justify-center py-20 text-center border-2 border-dashed border-[#b2b2b2] dark:border-[#1a365d] rounded-2xl bg-white/50 backdrop-blur-sm">
+            <Database className="size-10 text-[#b2b2b2] dark:text-[#8ba3c7] mb-3" />
+            <p className="text-lg font-bold text-[#6b6b6b] dark:text-[#8ba3c7]">
               No students found.
             </p>
           </div>

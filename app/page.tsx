@@ -22,12 +22,10 @@ export default function LoginPage() {
   const [submitting, setSubmitting] = useState(false);
   const [showMobileSplash, setShowMobileSplash] = useState(true);
 
-  // Auth Redirect
   useEffect(() => {
     if (!loading && user) router.replace(`/${user.role}`);
   }, [loading, router, user]);
 
-  // Mobile Splash Logic
   const hasTriggeredSplash = useRef(false);
   useEffect(() => {
     const isMobile = window.matchMedia("(max-width: 767px)").matches;
@@ -43,7 +41,6 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-
     try {
       const response = await BACKENDAPI.post("/login", {
         email,
@@ -58,56 +55,48 @@ export default function LoginPage() {
         toast.success(`Welcome back, ${data.fullName}!`);
       }
     } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.error ||
-        error.response?.data?.message ||
-        "Login failed.";
-      toast.error(errorMessage);
+      toast.error(error.response?.data?.error || "Login failed.");
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <main className="min-h-dvh bg-[#a9c8f4] p-3 sm:p-4">
-      {/* Conditionally render the mobile splash */}
+    <main className="min-h-screen bg-[#a1c6ea] p-4 flex items-center justify-center">
       {showMobileSplash && <MobileSplashOverlay />}
-
-      <section className="mx-auto grid min-h-[calc(100dvh-1.5rem)] w-full max-w-[1320px] overflow-hidden rounded-[18px] border border-[#0a2f66] bg-white shadow-[0_0_0_1px_rgba(255,255,255,0.65)] md:grid-cols-[1.18fr_0.82fr]">
+      <section className="w-full max-w-[1320px] bg-white rounded-3xl shadow-2xl overflow-hidden grid min-h-[750px] md:grid-cols-[1.1fr_0.9fr]">
         <AsideBanner />
 
-        <section className="flex items-center justify-center px-4 py-8 md:justify-end md:px-16">
-          <div className="w-full max-w-[420px]">
-            <div className="space-y-8 bg-white">
-              <LoginHeader mode={mode} setMode={setMode} />
+        <section className="flex flex-col justify-center px-6 py-12 md:px-16 bg-white">
+          <div className="w-full max-w-[400px] mx-auto space-y-8">
+            <LoginHeader mode={mode} setMode={setMode} />
 
-              <form onSubmit={handleLogin} className="space-y-5">
-                <LoginFormFields
-                  mode={mode}
-                  email={email}
-                  setEmail={setEmail}
-                  password={password}
-                  setPassword={setPassword}
-                />
+            <form onSubmit={handleLogin} className="space-y-6">
+              <LoginFormFields
+                mode={mode}
+                email={email}
+                setEmail={setEmail}
+                password={password}
+                setPassword={setPassword}
+              />
 
-                <Button
-                  type="submit"
-                  disabled={submitting}
-                  className="h-12 w-full bg-[#0a2f66]"
+              <Button
+                type="submit"
+                disabled={submitting}
+                className="h-12 w-full bg-[#0c2a5d] hover:bg-[#0c2a5d]/90 text-white rounded-lg font-medium text-[16px] shadow-sm transition-all"
+              >
+                {submitting ? "Logging in..." : "Login"}
+              </Button>
+
+              <div className="text-center text-[14px] mt-4">
+                <Link
+                  href="/Registration"
+                  className="text-[#0c2a5d] font-semibold hover:underline transition-colors"
                 >
-                  {submitting ? "Logging in..." : "Login"}
-                </Button>
-
-                <div className="text-center text-[12px]">
-                  <Link
-                    href="/Registration"
-                    className="text-[#0a2f66] underline"
-                  >
-                    New? Register Here
-                  </Link>
-                </div>
-              </form>
-            </div>
+                  New? Register Here
+                </Link>
+              </div>
+            </form>
           </div>
         </section>
       </section>

@@ -28,12 +28,12 @@ export default function CourseGrid({
 }: CourseGridProps) {
   return (
     <div className="flex w-full flex-col">
-      <div className="mb-6 flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
-        <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">
+      <div className="mb-6 flex items-center justify-between border-b border-[#d9e3f6] dark:border-[#1a365d] pb-4">
+        <h2 className="text-xl font-bold text-[#0a2f66] dark:text-white">
           Available Courses
         </h2>
         {!isLoading && courses.length > 0 && (
-          <span className="rounded-full bg-purple-100 dark:bg-purple-900/30 px-3 py-1 text-xs font-bold text-purple-700 dark:text-purple-400">
+          <span className="rounded-full bg-[#f2f2f2] dark:bg-[#1a365d] px-3 py-1 text-xs font-bold text-[#0a2f66] dark:text-[#8ba3c7]">
             Page {currentPage + 1} of {totalPages || 1}
           </span>
         )}
@@ -42,7 +42,7 @@ export default function CourseGrid({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-h-[400px]">
         {isLoading ? (
           <div className="col-span-full flex justify-center py-20">
-            <Loader2 className="size-8 animate-spin text-purple-600" />
+            <Loader2 className="size-8 animate-spin text-[#0a2f66] dark:text-white" />
           </div>
         ) : courses.length > 0 ? (
           courses.map((course) => {
@@ -52,32 +52,32 @@ export default function CourseGrid({
                 key={course.id}
                 className={`flex flex-col justify-between rounded-2xl border p-5 shadow-sm transition-all ${
                   isSelected
-                    ? "border-purple-500 bg-purple-50/50 dark:bg-purple-900/10 dark:border-purple-500"
-                    : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-purple-300 dark:hover:border-purple-700"
+                    ? "border-[#0a2f66] bg-[#f2f2f2] dark:bg-[#1a4b96]/20 dark:border-[#8ba3c7]"
+                    : "border-[#d9e3f6] dark:border-[#1a365d] bg-white dark:bg-[#0a1c3a] hover:border-[#0a2f66] dark:hover:border-[#8ba3c7]"
                 }`}
               >
                 <div className="mb-4 flex items-start justify-between">
-                  <div className="flex size-10 items-center justify-center rounded-xl bg-[#f0f6ff] dark:bg-blue-950/30 text-[#5a8ce6]">
+                  <div className="flex size-10 items-center justify-center rounded-xl bg-[#d9e3f6] dark:bg-[#1a365d] text-[#0a2f66] dark:text-white">
                     <BookOpen className="size-5" />
                   </div>
                   {isSelected ? (
-                    <CheckCircle2 className="size-6 text-purple-600 dark:text-purple-400" />
+                    <CheckCircle2 className="size-6 text-[#0a2f66] dark:text-[#8ba3c7]" />
                   ) : (
-                    <div className="size-6 rounded-full border-2 border-slate-200 dark:border-slate-700"></div>
+                    <div className="size-6 rounded-full border-2 border-[#b2b2b2] dark:border-[#1a365d]"></div>
                   )}
                 </div>
 
                 <div>
-                  <h3 className="font-black text-slate-800 dark:text-slate-100">
+                  <h3 className="font-black text-[#0a2f66] dark:text-white">
                     {course.code}
                   </h3>
-                  <p className="mt-1 text-sm font-medium text-slate-500 dark:text-slate-400 line-clamp-2">
+                  <p className="mt-1 text-sm font-medium text-[#262626] dark:text-[#8ba3c7] line-clamp-2">
                     {course.title}
                   </p>
                 </div>
 
                 <div className="mt-5 flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-slate-400">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-[#b2b2b2] dark:text-[#8ba3c7]">
                     <Clock className="size-3.5" />
                     <span>{course.credits} Credits</span>
                   </div>
@@ -85,8 +85,8 @@ export default function CourseGrid({
                     onClick={() => onToggleCourse(course.id)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
                       isSelected
-                        ? "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300 hover:bg-purple-200"
-                        : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 hover:bg-slate-200"
+                        ? "bg-[#0a2f66] text-white dark:bg-[#8ba3c7] dark:text-[#041024] hover:bg-[#0a2f66]/90 dark:hover:bg-[#8ba3c7]/80"
+                        : "bg-[#f2f2f2] text-[#262626] dark:bg-[#041024] dark:text-[#8ba3c7] hover:bg-[#d9e3f6] dark:hover:bg-[#1a365d]"
                     }`}
                   >
                     {isSelected ? "Deselect" : "Select"}
@@ -96,8 +96,8 @@ export default function CourseGrid({
             );
           })
         ) : (
-          <div className="col-span-full flex items-center justify-center rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 py-16">
-            <p className="text-sm font-medium text-slate-500">
+          <div className="col-span-full flex items-center justify-center rounded-2xl border border-dashed border-[#b2b2b2] dark:border-[#1a365d] py-16">
+            <p className="text-sm font-medium text-[#6b6b6b] dark:text-[#8ba3c7]">
               No courses available.
             </p>
           </div>
@@ -109,14 +109,14 @@ export default function CourseGrid({
           <button
             disabled={currentPage === 0}
             onClick={() => onPageChange(currentPage - 1)}
-            className="px-6 py-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-200 disabled:opacity-50 transition-colors"
+            className="px-6 py-2 bg-[#f2f2f2] dark:bg-[#041024] rounded-lg text-sm font-bold text-[#262626] dark:text-[#8ba3c7] hover:bg-[#d9e3f6] dark:hover:bg-[#1a365d] disabled:opacity-50 transition-colors"
           >
             Previous
           </button>
           <button
             disabled={currentPage >= totalPages - 1}
             onClick={() => onPageChange(currentPage + 1)}
-            className="px-6 py-2 bg-[#16085a] text-white rounded-lg text-sm font-bold hover:bg-[#5e3bce] disabled:opacity-50 transition-colors"
+            className="px-6 py-2 bg-[#0a2f66] dark:bg-[#1a4b96] text-white rounded-lg text-sm font-bold hover:bg-[#0a2f66]/90 dark:hover:bg-[#1a4b96]/80 disabled:opacity-50 transition-colors"
           >
             Next
           </button>

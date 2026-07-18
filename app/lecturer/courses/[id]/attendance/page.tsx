@@ -27,7 +27,6 @@ export default function TakeAttendancePage({
   const { id } = use(params);
   const router = useRouter();
 
-  //  Fetch the real course data
   const {
     courses,
     isLoading: isDashboardLoading,
@@ -35,19 +34,17 @@ export default function TakeAttendancePage({
   } = useLecturerDashboard();
   const course = courses.find((c) => c.id === id);
 
-  //  Fetch the active session to get the exact Session ID being monitored
   const { data: activeSessionData, error: sessionError } = useSWR(
     course ? `/active-session/${id}` : null,
     async (url) => {
       const res = await BACKENDAPI.get(url);
       return res.data;
     },
-    { refreshInterval: 0 }, // Fetch once, rely on WebSockets/Polling for live updates
+    { refreshInterval: 0 },
   );
 
   const sessionId = activeSessionData?.session?.id;
 
-  //  Telemetry State
   const [present, setPresent] = useState(0);
   const [offlineCount, setOfflineCount] = useState(0);
   const [phase, setPhase] = useState<Phase>("listening");
@@ -66,20 +63,15 @@ export default function TakeAttendancePage({
     setLogs((prev) => [...prev, `[${time}] ${msg}`]);
   }
 
-  // 4. REAL-TIME HARDWARE/BACKEND LISTENER
   useEffect(() => {
     if (!sessionId || !course) return;
 
     addLog(`[SYSTEM] Awaiting live telemetry for ${course.code}...`);
 
     /* 
-      ===============================================================
-      INTEGRATION POINT: Connect to backend for real real-time stream here.
+    
      i will use websockets to listen to the backend for live telemetry data. The backend will receive MQTT messages from the ESP32 and forward them to this frontend via WebSockets. This ensures that the frontend receives real-time updates without polling.
-      ===============================================================
-    */
-
-    // Example WebSocket Implementation:
+     
     /*
     const ws = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}/attendance/${sessionId}`);
     
@@ -128,7 +120,6 @@ export default function TakeAttendancePage({
     */
   }, [sessionId, course]);
 
-  // 5. Loading & Error States
   const isLoading = isDashboardLoading || (!sessionId && !sessionError);
   const isError =
     isDashboardError || sessionError || (!course && !isDashboardLoading);
@@ -136,8 +127,8 @@ export default function TakeAttendancePage({
   if (isLoading) {
     return (
       <div className="flex h-[60vh] w-full flex-col items-center justify-center gap-3">
-        <Loader2 className="size-10 animate-spin text-indigo-600 dark:text-indigo-400" />
-        <p className="text-sm font-semibold text-slate-500">
+        <Loader2 className="size-10 animate-spin text-[#0a2f66] dark:text-white" />
+        <p className="text-sm font-semibold text-[#6b6b6b] dark:text-[#8ba3c7]">
           Initializing telemetry & securing connection...
         </p>
       </div>
@@ -147,7 +138,7 @@ export default function TakeAttendancePage({
   if (isError) {
     return (
       <div className="max-w-4xl mx-auto pt-10">
-        <div className="flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50 p-6 text-red-600 shadow-sm">
+        <div className="flex items-center gap-3 rounded-2xl border border-red-200 bg-[#fff5eb] dark:bg-red-900/10 p-6 text-red-600 dark:text-red-400 shadow-sm">
           <AlertCircle className="size-6 shrink-0" />
           <div>
             <p className="font-bold">Telemetry connection failed</p>
@@ -159,7 +150,7 @@ export default function TakeAttendancePage({
         </div>
         <button
           onClick={() => router.push(`/lecturer/courses/${id}`)}
-          className="mt-6 flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-indigo-600 transition-colors"
+          className="mt-6 flex items-center gap-2 text-sm font-bold text-[#b2b2b2] hover:text-[#0a2f66] dark:text-[#8ba3c7] dark:hover:text-white transition-colors"
         >
           <ArrowLeft className="size-4" /> Back to session setup
         </button>
@@ -170,17 +161,17 @@ export default function TakeAttendancePage({
   return (
     <div className="space-y-6 max-w-6xl mx-auto pb-10">
       {/* Top Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+      <div className="flex items-center justify-between pb-4 border-b border-[#d9e3f6] dark:border-[#1a365d]">
         <div>
           <button
             onClick={() => router.push(`/lecturer/courses/${course?.id}`)}
-            className="flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-indigo-600 transition-colors mb-2"
+            className="flex items-center gap-2 text-sm font-bold text-[#b2b2b2] hover:text-[#0a2f66] dark:text-[#8ba3c7] dark:hover:text-white transition-colors mb-2"
           >
             <ArrowLeft className="size-4" /> Terminate Monitoring
           </button>
-          <h1 className="text-3xl font-extrabold text-slate-800 dark:text-white flex items-center gap-3">
+          <h1 className="text-3xl font-extrabold text-[#0a2f66] dark:text-white flex items-center gap-3">
             {course?.code}
-            <span className="flex items-center gap-1.5 text-[10px] font-black bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-400 px-3 py-1 rounded-md uppercase">
+            <span className="flex items-center gap-1.5 text-[10px] font-black bg-[#d9e3f6] dark:bg-[#1a4b96]/40 text-[#0a2f66] dark:text-white px-3 py-1 rounded-md uppercase">
               <Radio className="size-3 animate-pulse" /> Live Telemetry
             </span>
           </h1>

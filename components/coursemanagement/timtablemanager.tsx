@@ -57,14 +57,14 @@ export function TimetableManager({
   };
 
   return (
-    <Card className="border-t-4 border-t-indigo-600 shadow-sm">
+    <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-white/20 border-t-4 border-t-[#0c2a5d] dark:border-t-white shadow-sm transition-all">
       <CardHeader className="flex flex-row items-center justify-between pb-4">
         <div>
-          <CardTitle className="flex items-center gap-2 text-lg text-indigo-600">
+          <CardTitle className="flex items-center gap-2 text-lg text-[#0c2a5d] dark:text-white">
             <CalendarDays className="size-5" />
             Weekly Timetable
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-slate-500 dark:text-slate-400">
             Set the recurring weekly schedule for lecturer dashboards.
           </CardDescription>
         </div>
@@ -72,38 +72,39 @@ export function TimetableManager({
           onClick={addSlot}
           size="sm"
           variant="outline"
-          className="text-indigo-600 border-indigo-200 hover:bg-indigo-50"
+          className="text-[#0c2a5d] dark:text-white border-[#0c2a5d]/30 dark:border-white/30 hover:bg-[#0c2a5d]/10 dark:hover:bg-white/10 transition-colors"
         >
           <Plus className="size-4 mr-1" /> Add Slot
         </Button>
       </CardHeader>
       <CardContent className="space-y-4">
         {schedules.length === 0 ? (
-          <div className="text-center py-6 bg-slate-50 rounded-lg border border-dashed border-slate-200">
-            <p className="text-sm text-slate-500">No schedule assigned yet.</p>
+          <div className="text-center py-6 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-dashed border-slate-200 dark:border-slate-700">
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              No schedule assigned yet.
+            </p>
           </div>
         ) : (
           schedules.map((slot, index) => (
             <div
               key={index}
-              className="flex flex-col sm:flex-row gap-4 items-start sm:items-end bg-slate-50 p-4 rounded-lg border border-slate-100"
+              className="flex flex-col sm:flex-row gap-4 items-start sm:items-end bg-[#0c2a5d]/5 dark:bg-slate-800/50 p-4 rounded-lg border border-slate-100 dark:border-slate-700/50 transition-colors"
             >
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 flex-1 w-full">
                 <div className="space-y-1.5">
-                  <Label className="text-xs text-slate-500 uppercase tracking-wider">
+                  <Label className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                     Day
                   </Label>
-                  {/* FIX: Handled the null value from the Select component right here */}
                   <Select
                     value={slot.day_of_week}
                     onValueChange={(v) =>
                       updateSlot(index, "day_of_week", v ?? "Monday")
                     }
                   >
-                    <SelectTrigger className="bg-white">
+                    <SelectTrigger className="bg-white dark:bg-slate-900 dark:border-slate-700 dark:text-white focus:ring-[#0c2a5d] dark:focus:ring-white">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="dark:bg-slate-800 dark:border-slate-700">
                       {[
                         "Monday",
                         "Tuesday",
@@ -112,7 +113,11 @@ export function TimetableManager({
                         "Friday",
                         "Saturday",
                       ].map((day) => (
-                        <SelectItem key={day} value={day}>
+                        <SelectItem
+                          key={day}
+                          value={day}
+                          className="focus:bg-slate-100 dark:focus:bg-slate-700 dark:text-slate-100"
+                        >
                           {day}
                         </SelectItem>
                       ))}
@@ -121,7 +126,7 @@ export function TimetableManager({
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label className="text-xs text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                  <Label className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1">
                     <Clock className="size-3" /> Start
                   </Label>
                   <Input
@@ -130,12 +135,12 @@ export function TimetableManager({
                     onChange={(e) =>
                       updateSlot(index, "start_time", e.target.value)
                     }
-                    className="bg-white"
+                    className="bg-white dark:bg-slate-900 dark:border-slate-700 dark:text-white focus-visible:ring-[#0c2a5d] dark:focus-visible:ring-white"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label className="text-xs text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                  <Label className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1">
                     <Clock className="size-3" /> End
                   </Label>
                   <Input
@@ -144,19 +149,19 @@ export function TimetableManager({
                     onChange={(e) =>
                       updateSlot(index, "end_time", e.target.value)
                     }
-                    className="bg-white"
+                    className="bg-white dark:bg-slate-900 dark:border-slate-700 dark:text-white focus-visible:ring-[#0c2a5d] dark:focus-visible:ring-white"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label className="text-xs text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                  <Label className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1">
                     <MapPin className="size-3" /> Venue
                   </Label>
                   <Input
                     placeholder="e.g. LH-1"
                     value={slot.venue}
                     onChange={(e) => updateSlot(index, "venue", e.target.value)}
-                    className="bg-white"
+                    className="bg-white dark:bg-slate-900 dark:border-slate-700 dark:text-white focus-visible:ring-[#0c2a5d] dark:focus-visible:ring-white"
                   />
                 </div>
               </div>
@@ -165,7 +170,7 @@ export function TimetableManager({
                 variant="ghost"
                 size="icon"
                 onClick={() => removeSlot(index)}
-                className="text-red-500 hover:bg-red-50 hover:text-red-600 mt-2 sm:mt-0 shrink-0"
+                className="text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-300 mt-2 sm:mt-0 shrink-0 transition-colors"
               >
                 <Trash2 className="size-4" />
               </Button>

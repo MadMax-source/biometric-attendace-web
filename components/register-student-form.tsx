@@ -112,12 +112,12 @@ export function RegisterStudentForm({
   }
 
   return (
-    <div className="bg-[#a9c8f4]">
+    <div className="min-h-dvh bg-[#a1c6ea] dark:bg-[#041024] transition-colors duration-300">
       <form
         onSubmit={handleRegister}
         className="mx-auto flex min-h-[calc(100dvh-2rem)] w-full max-w-[640px] items-center justify-center px-3 py-4 sm:px-4"
       >
-        <Card className="w-full max-w-[520px] border border-[#d9e3f6] bg-white shadow-[0_24px_80px_rgba(15,23,42,0.12)]">
+        <Card className="w-full max-w-[520px] border border-[#d9e3f6] dark:border-[#1a365d] bg-white dark:bg-[#0a1c3a] shadow-[0_24px_80px_rgba(15,23,42,0.12)]">
           <CardContent className="space-y-6 p-5 sm:p-7">
             <RegistrationHeader mode={mode} setMode={setMode} />
 
@@ -130,7 +130,7 @@ export function RegisterStudentForm({
             <Button
               type="submit"
               disabled={saving}
-              className="h-12 w-full rounded-[6px] bg-[#0a2f66] text-[18px] font-medium text-white shadow-none hover:bg-white hover:text-[#0a2f66] hover:shadow-[0_4px_16px_rgba(15,23,42,0.12)] focus-visible:bg-white focus-visible:text-[#0a2f66] focus-visible:shadow-[0_4px_16px_rgba(15,23,42,0.12)]"
+              className="h-12 w-full rounded-[6px] bg-[#0a2f66] dark:bg-[#1a4b96] text-[18px] font-medium text-white shadow-none hover:bg-white hover:text-[#0a2f66] dark:hover:bg-[#041024] dark:hover:text-white transition-all focus-visible:bg-white focus-visible:text-[#0a2f66] focus-visible:shadow-[0_4px_16px_rgba(15,23,42,0.12)]"
             >
               {saving ? "Saving..." : "Sign up"}
             </Button>
@@ -138,7 +138,7 @@ export function RegisterStudentForm({
             <div className="text-center text-[12px]">
               <button
                 type="button"
-                className="text-[#0a2f66] underline underline-offset-2"
+                className="text-[#0a2f66] dark:text-[#a9c8f4] underline underline-offset-2 transition-colors"
                 onClick={() => router.push(backHref)}
               >
                 Have an account? Login

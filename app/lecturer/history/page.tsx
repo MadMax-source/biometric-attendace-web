@@ -13,10 +13,10 @@ export default function AttendanceHistoryPage() {
   return (
     <div className="flex flex-col gap-8 pb-20 max-w-7xl mx-auto">
       <div>
-        <h1 className="text-3xl font-extrabold text-slate-800 dark:text-slate-100">
+        <h1 className="text-3xl font-extrabold text-[#0a2f66] dark:text-white">
           Attendance History
         </h1>
-        <p className="text-sm font-medium text-slate-500 mt-2">
+        <p className="text-sm font-medium text-[#6b6b6b] dark:text-[#8ba3c7] mt-2">
           Review past sessions and export attendance reports.
         </p>
       </div>

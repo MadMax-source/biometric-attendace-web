@@ -30,40 +30,52 @@ export function PersonnelAssignment({
   lecturers,
   isLoading,
 }: PersonnelAssignmentProps) {
+  const displayText =
+    lecturerId === "unassigned"
+      ? "Leave unassigned for now"
+      : lecturers.find((l) => String(l.id) === String(lecturerId))?.full_name ||
+        "Select a lecturer";
+
   return (
-    <Card className="border-t-4 border-t-indigo-600 shadow-sm">
+    <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-white/20 border-t-4 border-t-[#0c2a5d] dark:border-t-white shadow-sm transition-all">
       <CardHeader className="pb-4">
-        <CardTitle className="flex items-center gap-2 text-lg text-indigo-600">
+        <CardTitle className="flex items-center gap-2 text-lg text-[#0c2a5d] dark:text-white">
           <UserPlus className="size-5" />
           Assigned Lecturer
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-slate-500 dark:text-slate-400">
           Select the primary lecturer managing this course.
         </CardDescription>
       </CardHeader>
       <CardContent>
         {isLoading ? (
-          <div className="flex items-center gap-2 text-sm text-slate-500">
-            <Loader2 className="size-4 animate-spin text-indigo-600" /> Loading
-            personnel...
+          <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+            <Loader2 className="size-4 animate-spin text-[#0c2a5d] dark:text-white" />{" "}
+            Loading personnel...
           </div>
         ) : (
           <Select
-            value={lecturerId}
+            value={String(lecturerId)}
             onValueChange={(val) => onChange(val ?? "unassigned")}
           >
-            <SelectTrigger className="focus:ring-indigo-600 w-full sm:max-w-md">
-              <SelectValue placeholder="Select a lecturer" />
+            <SelectTrigger className="w-full sm:max-w-md focus:ring-[#0c2a5d] dark:focus:ring-white dark:bg-slate-800 dark:border-white/20 dark:text-slate-100 transition-colors">
+              <SelectValue placeholder="Select a lecturer">
+                {displayText}
+              </SelectValue>
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="dark:bg-slate-800 dark:border-slate-700">
               <SelectItem
                 value="unassigned"
-                className="text-muted-foreground italic"
+                className="text-slate-500 dark:text-slate-400 italic focus:bg-slate-100 dark:focus:bg-slate-700"
               >
                 Unassigned
               </SelectItem>
               {lecturers.map((lecturer) => (
-                <SelectItem key={lecturer.id} value={lecturer.id}>
+                <SelectItem
+                  key={lecturer.id}
+                  value={String(lecturer.id)}
+                  className="focus:bg-slate-100 dark:focus:bg-slate-700 dark:text-slate-100"
+                >
                   {lecturer.full_name}
                 </SelectItem>
               ))}

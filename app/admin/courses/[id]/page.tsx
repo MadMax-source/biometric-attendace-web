@@ -20,6 +20,7 @@ import { TimetableManager } from "@/components/coursemanagement/timtablemanager"
 import { DangerZone } from "@/components/coursemanagement/dangerZone";
 import { CourseSchedule } from "@/type";
 import { useCourses } from "@/hook/usecourse";
+import { useLecturer } from "@/hook/useLecturer";
 
 export default function ManageCoursePage({
   params,
@@ -28,19 +29,15 @@ export default function ManageCoursePage({
 }) {
   const { id } = use(params);
 
-  // 1. Get all courses, then find the specific one matching this URL's ID
   const { courses, isLoading: courseLoading } = useCourses();
   const courseData = courses?.find((c: any) => String(c.id) === String(id));
 
-  const { data: lecturersData, isLoading: lecturersLoading } = useSWR(
-    "/getalllecturers",
-    async (url) => {
-      const res = await BACKENDAPI.get(url);
-      return res.data?.data || res.data || [];
-    },
-  );
+  const {
+    lecturerLists: lecturersData,
+    isLoading: lecturersLoading,
+    isError: error,
+  } = useLecturer();
 
-  // 2. Form State
   const [lecturerId, setLecturerId] = useState<string>("unassigned");
   const [schedules, setSchedules] = useState<CourseSchedule[]>([]);
   const [isSaving, setIsSaving] = useState(false);
@@ -53,19 +50,23 @@ export default function ManageCoursePage({
     }
   }, [courseData]);
 
-  // 3. Save Handler
   const handleSaveChanges = async () => {
+    if (!lecturerId || !schedules) {
+      toast.error("Please ensure all fields are filled before saving.");
+      return;
+    }
     try {
       setIsSaving(true);
 
-      await BACKENDAPI.put(`/courses/${id}`, {
-        lecturerId: lecturerId === "unassigned" ? null : lecturerId,
+      await BACKENDAPI.post(`/courses/${id}`, {
+        lecturerId: lecturerId,
         schedules: schedules,
       });
 
       toast.success("Course settings saved successfully!");
-    } catch (err) {
-      toast.error("Failed to save course settings.");
+    } catch (err: any) {
+      console.log(err);
+      toast.error(err.message);
     } finally {
       setIsSaving(false);
     }
@@ -105,10 +106,12 @@ export default function ManageCoursePage({
 
         {/* RIGHT COLUMN: Actions & Danger Zone */}
         <div className="space-y-6">
-          <Card className="border-t-4 border-t-slate-200 shadow-sm">
+          <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-white/20 border-t-4 border-t-slate-300 dark:border-t-slate-700 shadow-sm transition-all">
             <CardHeader>
-              <CardTitle className="text-lg">Publish Changes</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-lg text-slate-900 dark:text-white">
+                Publish Changes
+              </CardTitle>
+              <CardDescription className="text-slate-500 dark:text-slate-400">
                 Save personnel and schedule updates to the live database.
               </CardDescription>
             </CardHeader>
@@ -116,7 +119,7 @@ export default function ManageCoursePage({
               <Button
                 onClick={handleSaveChanges}
                 disabled={isSaving}
-                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-md"
+                className="w-full bg-[#0c2a5d] hover:bg-[#0c2a5d]/90 text-white dark:bg-white dark:text-[#0c2a5d] dark:hover:bg-slate-200 shadow-md transition-colors"
               >
                 {isSaving ? (
                   <Loader2 className="size-4 mr-2 animate-spin" />

@@ -19,11 +19,6 @@ interface Course {
   enrolled_count: number;
 }
 
-interface DashboardResponse {
-  courses: Course[];
-  today_schedule: any[];
-}
-
 export default function LecturerCoursesPage() {
   const { courses, isError, isLoading } = useLecturerDashboard();
 
@@ -32,8 +27,8 @@ export default function LecturerCoursesPage() {
   if (isLoading) {
     return (
       <div className="flex h-[60vh] w-full flex-col items-center justify-center gap-3">
-        <Loader2 className="size-10 animate-spin text-indigo-600 dark:text-indigo-400" />
-        <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 animate-pulse">
+        <Loader2 className="size-10 animate-spin text-[#0a2f66] dark:text-white" />
+        <p className="text-sm font-semibold text-[#6b6b6b] dark:text-[#8ba3c7] animate-pulse">
           Loading your courses...
         </p>
       </div>
@@ -59,22 +54,22 @@ export default function LecturerCoursesPage() {
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-10">
       <div className="relative">
-        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-slate-900 via-indigo-800 to-slate-900 dark:from-white dark:via-indigo-200 dark:to-white">
+        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#0a2f66] dark:text-white">
           My Courses
         </h1>
-        <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mt-2 flex items-center gap-2">
-          <Sparkles className="size-4 text-indigo-500" />
+        <p className="text-sm font-medium text-[#6b6b6b] dark:text-[#8ba3c7] mt-2 flex items-center gap-2">
+          <Sparkles className="size-4 text-[#0a2f66] dark:text-white" />
           Select the course you want to teach.
         </p>
       </div>
 
       {myCourses.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 px-4 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/20">
-          <BookOpen className="size-16 text-slate-300 dark:text-slate-700 mb-4" />
-          <h3 className="text-lg font-bold text-slate-700 dark:text-slate-300">
+        <div className="flex flex-col items-center justify-center py-20 px-4 rounded-3xl border-2 border-dashed border-[#d9e3f6] dark:border-[#1a365d] bg-[#f2f2f2] dark:bg-[#041024]">
+          <BookOpen className="size-16 text-[#b2b2b2] dark:text-[#8ba3c7] mb-4" />
+          <h3 className="text-lg font-bold text-[#0a2f66] dark:text-white">
             No Courses Assigned
           </h3>
-          <p className="text-sm text-slate-500 dark:text-slate-500 mt-2 text-center max-w-sm">
+          <p className="text-sm text-[#6b6b6b] dark:text-[#8ba3c7] mt-2 text-center max-w-sm">
             You currently don't have any courses assigned to you for this
             session. Contact your department administrator if this is a mistake.
           </p>
@@ -84,41 +79,41 @@ export default function LecturerCoursesPage() {
           {myCourses.map((c) => (
             <div
               key={c.id}
-              className="group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-white dark:bg-slate-900 p-6 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-slate-100 dark:border-slate-800 hover:-translate-y-1 hover:shadow-[0_8px_20px_-6px_rgba(79,70,229,0.15)] transition-all duration-300"
+              className="group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-white dark:bg-[#0a1c3a] p-6 shadow-[0_24px_80px_rgba(15,23,42,0.12)] border border-[#d9e3f6] dark:border-[#1a365d] hover:-translate-y-1 transition-all duration-300"
             >
-              <div className="absolute -top-6 -right-6 p-4 opacity-5 group-hover:opacity-10 transition-opacity group-hover:scale-110 duration-500 text-indigo-600">
+              <div className="absolute -top-6 -right-6 p-4 opacity-5 group-hover:opacity-10 transition-opacity group-hover:scale-110 duration-500 text-[#0a2f66] dark:text-white">
                 <BookOpen className="size-32" />
               </div>
 
               <div>
                 <div className="flex items-start justify-between mb-4">
-                  <div className="flex size-12 items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 shadow-sm">
+                  <div className="flex size-12 items-center justify-center rounded-xl bg-[#f2f2f2] dark:bg-[#1a4b96]/40 text-[#0a2f66] dark:text-white shadow-sm">
                     <BookOpen className="size-6" />
                   </div>
-                  <span className="inline-flex items-center rounded-md bg-slate-100 dark:bg-slate-800 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-slate-600 dark:text-slate-300">
+                  <span className="inline-flex items-center rounded-md bg-[#f2f2f2] dark:bg-[#041024] px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-[#6b6b6b] dark:text-[#8ba3c7]">
                     {c.level} Level
                   </span>
                 </div>
 
                 <div className="space-y-1.5 mb-6 relative z-10">
-                  <p className="text-2xl font-black text-slate-800 dark:text-slate-100">
+                  <p className="text-2xl font-black text-[#0a2f66] dark:text-white">
                     {c.code}
                   </p>
-                  <p className="text-sm font-semibold leading-relaxed text-slate-500 dark:text-slate-400 line-clamp-2">
+                  <p className="text-sm font-semibold leading-relaxed text-[#6b6b6b] dark:text-[#8ba3c7] line-clamp-2">
                     {c.title}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-50 dark:border-slate-800/60 relative z-10">
-                <span className="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400">
-                  <Users className="size-4 text-indigo-400" />
+              <div className="flex items-center justify-between mt-auto pt-4 border-t border-[#f2f2f2] dark:border-[#1a365d] relative z-10">
+                <span className="flex items-center gap-1.5 text-xs font-bold text-[#6b6b6b] dark:text-[#8ba3c7]">
+                  <Users className="size-4 text-[#0a2f66] dark:text-white" />
                   {c.enrolled_count} Enrolled
                 </span>
 
                 <Link
                   href={`/lecturer/courses/${c.id}`}
-                  className="flex items-center justify-center gap-2 rounded-lg bg-indigo-50 dark:bg-indigo-500/10 px-4 py-2 text-xs font-bold text-indigo-700 dark:text-indigo-300 hover:bg-indigo-600 hover:text-white transition-all"
+                  className="flex items-center justify-center gap-2 rounded-lg bg-[#f2f2f2] dark:bg-[#1a4b96]/40 px-4 py-2 text-xs font-bold text-[#0a2f66] dark:text-white hover:bg-[#0a2f66] hover:text-white dark:hover:bg-[#1a4b96] transition-all"
                 >
                   Open <ArrowRight className="size-3.5" />
                 </Link>

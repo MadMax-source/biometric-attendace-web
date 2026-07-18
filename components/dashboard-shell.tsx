@@ -44,7 +44,7 @@ export function DashboardShell({
 
   if (loading || !user || user.role !== role) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background text-sm text-muted-foreground">
+      <div className="flex min-h-screen items-center justify-center bg-[#a9c8f4] dark:bg-[#041024] text-sm text-[#0a2f66] dark:text-white">
         Loading...
       </div>
     );
@@ -56,17 +56,16 @@ export function DashboardShell({
   }
 
   return (
-    <div className="min-h-screen bg-[#edf3fa] dark:bg-slate-950 lg:grid lg:grid-cols-[260px_1fr] font-sans transition-colors duration-300">
-      {/* SIDEBAR */}
+    <div className="min-h-screen bg-[#a9c8f4] dark:bg-[#041024] lg:grid lg:grid-cols-[260px_1fr] font-sans transition-colors duration-300">
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 w-[260px] -translate-x-full bg-[#5e3bce] dark:bg-[#3d248c] text-white transition-transform lg:static lg:translate-x-0 shadow-xl lg:shadow-none",
+          "fixed inset-y-0 left-0 z-40 w-[260px] -translate-x-full bg-white dark:bg-[#0a1c3a] text-[#0a2f66] dark:text-white transition-transform lg:static lg:translate-x-0 shadow-[0_24px_80px_rgba(15,23,42,0.12)] lg:shadow-none",
           open && "translate-x-0",
         )}
       >
         <div className="flex h-32 flex-col items-center justify-center gap-2 relative">
           <button
-            className="absolute right-4 top-4 p-1 lg:hidden text-white/70 hover:text-white"
+            className="absolute right-4 top-4 p-1 lg:hidden text-[#b2b2b2] hover:text-[#0a2f66] dark:text-[#8ba3c7] dark:hover:text-white"
             onClick={() => setOpen(false)}
           >
             <X className="size-5" />
@@ -74,10 +73,10 @@ export function DashboardShell({
 
           <div className="flex items-center gap-2 mt-4">
             <div className="relative flex items-center justify-center">
-              <Hexagon className="size-10 stroke-[1.5px]" />
-              <div className="absolute h-1 w-8 bg-white/20 -z-10"></div>
+              <Hexagon className="size-10 stroke-[1.5px] text-[#0a2f66] dark:text-white" />
+              <div className="absolute h-1 w-8 bg-[#d9e3f6] dark:bg-[#1a4b96] -z-10"></div>
             </div>
-            <span className="text-2xl font-semibold tracking-wide">
+            <span className="text-2xl font-semibold tracking-wide text-[#0a2f66] dark:text-white">
               Attendice
             </span>
           </div>
@@ -92,16 +91,18 @@ export function DashboardShell({
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-4 px-8 py-4 text-[15px] font-medium transition-all duration-200",
+                  "flex items-center gap-4 px-8 py-4 text-[15px] font-medium transition-all duration-200 border-l-4",
                   active
-                    ? "bg-[#16085a] dark:bg-black/40 text-white border-l-4 border-white"
-                    : "text-white/70 hover:bg-white/5 hover:text-white border-l-4 border-transparent",
+                    ? "bg-[#f2f2f2] dark:bg-[#1a4b96] text-[#0a2f66] dark:text-white border-[#0a2f66] dark:border-white"
+                    : "text-[#b2b2b2] dark:text-[#8ba3c7] hover:bg-[#f2f2f2] dark:hover:bg-[#1a4b96]/50 hover:text-[#0a2f66] dark:hover:text-white border-transparent",
                 )}
               >
                 <Icon
                   className={cn(
                     "size-5",
-                    active ? "text-white" : "text-white/70",
+                    active
+                      ? "text-[#0a2f66] dark:text-white"
+                      : "text-[#b2b2b2] dark:text-[#8ba3c7]",
                   )}
                 />
                 {item.label}
@@ -113,7 +114,7 @@ export function DashboardShell({
         <div className="absolute inset-x-0 bottom-8 px-6">
           <button
             onClick={handleLogout}
-            className="flex w-full items-center justify-center gap-3 rounded-xl bg-white/10 py-3 text-sm font-medium text-white transition hover:bg-white/20"
+            className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#f2f2f2] dark:bg-[#1a4b96]/40 py-3 text-sm font-medium text-[#0a2f66] dark:text-white transition hover:bg-[#d9e3f6] dark:hover:bg-[#1a4b96]"
           >
             <LogOut className="size-4" />
             Log out
@@ -121,23 +122,20 @@ export function DashboardShell({
         </div>
       </aside>
 
-      {/* MOBILE OVERLAY */}
       {open && (
         <div
-          className="fixed inset-0 z-30 bg-black/40 backdrop-blur-sm lg:hidden"
+          className="fixed inset-0 z-30 bg-[#041024]/40 backdrop-blur-sm lg:hidden"
           onClick={() => setOpen(false)}
           aria-hidden="true"
         />
       )}
 
-      {/* MAIN CONTENT AREA */}
       <div className="flex min-h-screen flex-col overflow-y-auto">
-        {/* GLOBAL TOP HEADER */}
-        <header className="sticky top-0 z-20 flex h-24 items-center justify-between px-6 lg:px-10 bg-[#edf3fa]/80 dark:bg-slate-950/80 backdrop-blur-md">
+        <header className="sticky top-0 z-20 flex h-24 items-center justify-between px-6 lg:px-10 bg-[#a9c8f4]/90 dark:bg-[#041024]/90 backdrop-blur-md">
           <div className="flex items-center gap-4">
             <button
               onClick={() => setOpen(true)}
-              className="lg:hidden text-slate-700 dark:text-slate-300"
+              className="lg:hidden text-[#0a2f66] dark:text-white"
             >
               <Menu className="size-6" />
             </button>
@@ -146,17 +144,16 @@ export function DashboardShell({
           <div className="flex items-center gap-6 sm:gap-8 ml-auto">
             <ThemeToggle />
 
-            <button className="relative text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors hidden sm:block">
+            <button className="relative text-[#0a2f66] dark:text-[#8ba3c7] hover:text-[#0a2f66]/80 dark:hover:text-white transition-colors hidden sm:block">
               <Bell className="size-5" />
-              <span className="absolute right-0 top-0 size-2.5 rounded-full border-2 border-[#edf3fa] dark:border-slate-950 bg-red-500"></span>
+              <span className="absolute right-0 top-0 size-2.5 rounded-full border-2 border-[#a9c8f4] dark:border-[#041024] bg-red-500"></span>
             </button>
 
-            {/* Clickable Profile Area mapped to the user's specific data */}
             <Link
               href="/student/profile"
               className="flex items-center gap-3 hover:opacity-80 transition-opacity cursor-pointer"
             >
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-300">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-white dark:bg-[#1a4b96] text-[#0a2f66] dark:text-white shadow-sm border border-[#d9e3f6] dark:border-transparent">
                 {user?.imageurl ? (
                   <img
                     src={user.imageurl}
@@ -164,20 +161,20 @@ export function DashboardShell({
                     className="size-full rounded-full object-cover"
                   />
                 ) : (
-                  <span className="font-semibold">
+                  <span className="font-semibold text-[#0a2f66] dark:text-white">
                     {user?.fullName.charAt(0)?.toUpperCase() || ""}
                   </span>
                 )}
               </div>
               <div className="hidden flex-col sm:flex text-left">
-                <span className="text-sm font-bold text-slate-800 dark:text-slate-100">
+                <span className="text-sm font-bold text-[#0a2f66] dark:text-white">
                   {user?.email}
                 </span>
-                <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">
+                <span className="text-[10px] font-semibold text-[#0a2f66]/70 dark:text-[#8ba3c7]">
                   {user?.matricNumber}
                 </span>
               </div>
-              <ChevronDown className="size-4 text-slate-400 hidden sm:block" />
+              <ChevronDown className="size-4 text-[#0a2f66]/60 dark:text-[#8ba3c7] hidden sm:block" />
             </Link>
           </div>
         </header>

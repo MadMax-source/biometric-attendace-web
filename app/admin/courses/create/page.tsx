@@ -85,10 +85,9 @@ export default function CreateCoursePage() {
         title="Create Course"
         description="Add a new course to the department catalog and assign personnel."
       />
-
       <form onSubmit={handleSubmit} className="space-y-6">
-        <Card className="border-t-4 border-t-[#0c2a5d] shadow-md overflow-hidden ring-1 ring-border/50 border-x-0 border-b-0">
-          <div className="bg-[#0c2a5d] px-6 py-4">
+        <Card className="border-t-4 border-t-[#0a2f66] dark:border-t-white shadow-[0_24px_80px_rgba(15,23,42,0.12)] overflow-hidden ring-1 ring-[#d9e3f6] dark:ring-[#1a365d] border-x-0 border-b-0 bg-white dark:bg-[#0a1c3a]">
+          <div className="bg-[#0a2f66] dark:bg-[#1a4b96] px-6 py-4">
             <h2 className="text-lg font-semibold text-white tracking-tight">
               Course Information
             </h2>
@@ -96,7 +95,7 @@ export default function CreateCoursePage() {
 
           <CardContent className="p-0">
             <CourseDetails form={form} update={update} />
-            <Separator />
+            <Separator className="bg-[#f2f2f2] dark:bg-[#1a365d]" />
             <LecturerAssignment
               form={form}
               update={update}
@@ -106,19 +105,22 @@ export default function CreateCoursePage() {
           </CardContent>
         </Card>
 
-        <div className="flex justify-end gap-4 pt-2">
+        <div className="flex justify-end gap-4 pt-2 ">
+          {/* CANCEL BUTTON */}
           <Button
             type="button"
             variant="outline"
-            className="w-full sm:w-auto"
+            className="w-full sm:w-auto min-w-[140px] bg-white/80 dark:bg-[#0a1c3a]/80 backdrop-blur-sm text-[#0a2f66] dark:text-white border-[#d9e3f6] dark:border-[#1a365d] hover:bg-[#f2f2f2] dark:hover:bg-[#1a4b96]/40 transition-all"
             onClick={() => router.push("/admin/courses")}
           >
             Cancel
           </Button>
+
+          {/* SAVE BUTTON */}
           <Button
             type="submit"
             disabled={saving}
-            className="w-full sm:w-auto min-w-[140px] bg-[#0c2a5d] hover:bg-[#0c2a5d]/90 text-white"
+            className="w-full sm:w-auto min-w-[140px] bg-white/80 dark:bg-[#0a1c3a]/80 backdrop-blur-sm text-[#0a2f66] dark:text-white border border-[#0a2f66]/30 dark:border-[#1a365d] hover:bg-[#0a2f66] hover:text-white dark:hover:bg-[#1a4b96] transition-all shadow-sm"
           >
             {saving ? <Loader2 className="size-4 mr-2 animate-spin" /> : null}
             {saving ? "Saving..." : "Save Course"}

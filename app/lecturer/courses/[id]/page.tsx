@@ -79,7 +79,6 @@ export default function LecturerCourseDetail({
 
     setStarting(true);
     try {
-      // Included the form data so your backend can actually save it!
       const response = await BACKENDAPI.post("/start-session", {
         courseId: course?.id,
       });
@@ -130,8 +129,8 @@ export default function LecturerCourseDetail({
   if (isLoading) {
     return (
       <div className="flex h-[60vh] w-full flex-col items-center justify-center gap-3">
-        <Loader2 className="size-10 animate-spin text-indigo-600 dark:text-indigo-400" />
-        <p className="text-sm font-semibold text-slate-500">
+        <Loader2 className="size-10 animate-spin text-[#0a2f66] dark:text-white" />
+        <p className="text-sm font-semibold text-[#6b6b6b] dark:text-[#8ba3c7]">
           Loading course details...
         </p>
       </div>
@@ -141,7 +140,7 @@ export default function LecturerCourseDetail({
   if (isError || !course) {
     return (
       <div className="max-w-4xl mx-auto pt-10">
-        <div className="flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50 p-6 text-red-600 shadow-sm">
+        <div className="flex items-center gap-3 rounded-2xl border border-red-200 dark:border-red-900/50 bg-[#fff5eb] dark:bg-red-900/10 p-6 text-red-600 dark:text-red-400 shadow-sm">
           <AlertCircle className="size-6 shrink-0" />
           <div>
             <p className="font-bold">Course not found</p>
@@ -154,7 +153,7 @@ export default function LecturerCourseDetail({
         </div>
         <button
           onClick={() => router.push("/lecturer/courses")}
-          className="mt-6 flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-indigo-600 transition-colors"
+          className="mt-6 flex items-center gap-2 text-sm font-bold text-[#b2b2b2] hover:text-[#0a2f66] dark:text-[#8ba3c7] dark:hover:text-white transition-colors"
         >
           <ArrowLeft className="size-4" /> Back to courses
         </button>
@@ -166,7 +165,7 @@ export default function LecturerCourseDetail({
     <div className="space-y-6 max-w-4xl mx-auto pb-10">
       <button
         onClick={() => router.push("/lecturer/courses")}
-        className="flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+        className="flex items-center gap-2 text-sm font-bold text-[#b2b2b2] hover:text-[#0a2f66] dark:text-[#8ba3c7] dark:hover:text-white transition-colors"
       >
         <ArrowLeft className="size-4" /> Back to courses
       </button>
@@ -179,14 +178,14 @@ export default function LecturerCourseDetail({
 
       {/* Conditionally render the Active Session Banner OR the Setup Form */}
       {isSessionActive ? (
-        <div className="rounded-2xl border border-indigo-200 bg-indigo-50/50 p-8 text-center shadow-sm dark:border-indigo-900/50 dark:bg-indigo-900/10">
-          <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400">
+        <div className="rounded-2xl border border-[#d9e3f6] dark:border-[#1a365d] bg-[#f2f2f2] dark:bg-[#041024] p-8 text-center shadow-[0_24px_80px_rgba(15,23,42,0.12)]">
+          <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-[#d9e3f6] dark:bg-[#1a4b96]/40 text-[#0a2f66] dark:text-white">
             <Radio className="size-6 animate-pulse" />
           </div>
-          <h3 className="mb-2 text-xl font-bold text-indigo-900 dark:text-indigo-100">
+          <h3 className="mb-2 text-xl font-bold text-[#0a2f66] dark:text-white">
             Session is currently active
           </h3>
-          <p className="mb-8 text-sm text-indigo-700/80 dark:text-indigo-300 max-w-md mx-auto">
+          <p className="mb-8 text-sm text-[#6b6b6b] dark:text-[#8ba3c7] max-w-md mx-auto">
             You have an ongoing attendance session for this course today. You
             can resume scanning or end the session to close attendance.
           </p>
@@ -195,14 +194,14 @@ export default function LecturerCourseDetail({
               onClick={() =>
                 router.push(`/lecturer/courses/${course?.id}/attendance`)
               }
-              className="w-full sm:w-auto rounded-lg bg-indigo-600 px-8 py-3 text-sm font-bold text-white hover:bg-indigo-700 transition-colors shadow-sm"
+              className="w-full sm:w-auto rounded-lg bg-[#0a2f66] dark:bg-[#1a4b96] px-8 py-3 text-sm font-bold text-white hover:bg-[#0a2f66]/90 dark:hover:bg-[#1a4b96]/80 transition-colors shadow-sm"
             >
               Resume Scanner
             </button>
             <button
               onClick={endSession}
               disabled={ending}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-white px-8 py-3 text-sm font-bold text-red-600 hover:bg-red-50 dark:border-red-900/50 dark:bg-slate-900 dark:text-red-400 dark:hover:bg-red-900/20 transition-colors"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-lg border border-red-200 dark:border-red-900/50 bg-white dark:bg-[#0a1c3a] px-8 py-3 text-sm font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
             >
               {ending ? (
                 <Loader2 className="size-4 animate-spin" />

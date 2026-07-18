@@ -18,7 +18,7 @@ export default function RegistrationFAB({
       <button
         onClick={onRegister}
         disabled={isSubmitting}
-        className="flex items-center gap-2 rounded-full bg-[#16085a] px-6 py-4 font-bold text-white shadow-xl hover:bg-[#5e3bce] transition-colors disabled:opacity-70"
+        className="flex items-center gap-2 rounded-full bg-[#0a2f66] dark:bg-[#1a4b96] px-6 py-4 font-bold text-white shadow-[0_24px_80px_rgba(15,23,42,0.12)] hover:bg-[#0a2f66]/90 dark:hover:bg-[#1a4b96]/80 transition-colors disabled:opacity-70"
       >
         {isSubmitting ? (
           <Loader2 className="size-5 animate-spin" />

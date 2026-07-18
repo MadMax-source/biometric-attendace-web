@@ -15,7 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { BlockchainReceiptModal } from "@/components/blockchain";
-import { useStudentAttendance } from "@/hook/useAttendance"; // Ensure path is correct
+import { useStudentAttendance } from "@/hook/useAttendance";
 
 export default function StudentCourseDetail({
   params,
@@ -34,7 +34,7 @@ export default function StudentCourseDetail({
       <div className="space-y-6">
         <PageHeader title="Loading Course Details..." />
         <div className="flex justify-center py-12">
-          <p className="text-slate-500 animate-pulse font-medium">
+          <p className="text-[#6b6b6b] dark:text-[#8ba3c7] font-medium animate-pulse">
             Fetching from database...
           </p>
         </div>
@@ -61,14 +61,14 @@ export default function StudentCourseDetail({
         <Button
           variant="ghost"
           size="sm"
-          className="-ml-2 text-slate-500"
+          className="-ml-2 text-[#6b6b6b] dark:text-[#8ba3c7]"
           onClick={() => router.push("/student/courses")}
         >
           <ArrowLeft className="size-4 mr-2" />
           Back to my courses
         </Button>
         <PageHeader title="Course Not Found" />
-        <div className="py-12 text-center text-slate-500">
+        <div className="py-12 text-center text-[#6b6b6b] dark:text-[#8ba3c7]">
           You do not appear to be registered for this course, or it does not
           exist.
         </div>
@@ -85,7 +85,7 @@ export default function StudentCourseDetail({
       <Button
         variant="ghost"
         size="sm"
-        className="-ml-2 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100"
+        className="-ml-2 text-[#6b6b6b] dark:text-[#8ba3c7] hover:text-[#0a2f66] dark:hover:text-white"
         onClick={() => router.push("/student/courses")}
       >
         <ArrowLeft className="size-4 mr-2" />
@@ -107,50 +107,50 @@ export default function StudentCourseDetail({
       </div>
 
       {/* PROGRESS CARD */}
-      <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm rounded-[20px]">
+      <Card className="border-[#d9e3f6] dark:border-[#1a365d] bg-white dark:bg-[#0a1c3a] shadow-[0_24px_80px_rgba(15,23,42,0.12)] rounded-[20px]">
         <CardHeader>
-          <CardTitle className="text-base font-bold text-slate-800 dark:text-slate-100">
+          <CardTitle className="text-base font-bold text-[#0a2f66] dark:text-white">
             Attendance Percentage
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-slate-500 dark:text-slate-400 font-medium">
+            <span className="text-[#6b6b6b] dark:text-[#8ba3c7] font-medium">
               {course.present} of {course.total} classes
             </span>
-            <span className="font-black text-[#5e3bce] dark:text-[#a98cfb]">
+            <span className="font-black text-[#0a2f66] dark:text-white">
               {pct}%
             </span>
           </div>
           <Progress
             value={pct}
-            className="h-2 bg-slate-100 dark:bg-slate-800"
+            className="h-2 [&_[data-slot=progress-track]]:bg-[#f2f2f2] dark:[&_[data-slot=progress-track]]:bg-[#1a365d] [&_[data-slot=progress-indicator]]:bg-[#0a2f66] dark:[&_[data-slot=progress-indicator]]:bg-white"
           />
         </CardContent>
       </Card>
 
       {/* ATTENDANCE LOG */}
-      <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm rounded-[20px] overflow-hidden">
-        <CardHeader className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 pb-4">
-          <CardTitle className="text-base font-bold text-slate-800 dark:text-slate-100">
+      <Card className="border-[#d9e3f6] dark:border-[#1a365d] bg-white dark:bg-[#0a1c3a] shadow-[0_24px_80px_rgba(15,23,42,0.12)] rounded-[20px] overflow-hidden">
+        <CardHeader className="border-b border-[#f2f2f2] dark:border-[#1a365d] bg-[#f2f2f2]/50 dark:bg-[#041024]/50 pb-4">
+          <CardTitle className="text-base font-bold text-[#0a2f66] dark:text-white">
             Class Log
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="divide-y divide-slate-100 dark:divide-slate-800/60">
+          <div className="divide-y divide-[#f2f2f2] dark:divide-[#1a365d]">
             {course.history && course.history.length > 0 ? (
               course.history.map((r: any) => (
                 <div
                   key={r.id}
-                  className="flex items-center justify-between p-4 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/40"
+                  className="flex items-center justify-between p-4 transition-colors hover:bg-[#f2f2f2]/50 dark:hover:bg-[#1a365d]/40"
                 >
-                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  <span className="text-sm font-medium text-[#262626] dark:text-[#8ba3c7]">
                     {r.date}
                   </span>
 
                   {r.status === "present" ? (
                     <div className="flex items-center gap-3">
-                      <Badge className="gap-1.5 bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50 border-none px-2.5 py-1">
+                      <Badge className="gap-1.5 bg-[#eafff0] text-green-700 hover:bg-[#d4fce1] dark:bg-[#1a365d] dark:text-green-400 border-none px-2.5 py-1">
                         <CheckCircle2 className="size-3.5" />
                         Present
                       </Badge>
@@ -158,7 +158,7 @@ export default function StudentCourseDetail({
                       {r.transactionHash && (
                         <button
                           onClick={() => setSelectedReceipt(r)}
-                          className="flex items-center gap-1.5 rounded-lg bg-[#f7f2fe] dark:bg-purple-900/20 px-3 py-1.5 text-xs font-bold text-[#5e3bce] dark:text-[#a98cfb] transition-all hover:bg-[#5e3bce] hover:text-white dark:hover:bg-purple-800/40 dark:hover:text-purple-300 border border-purple-100 dark:border-purple-800/30"
+                          className="flex items-center gap-1.5 rounded-lg bg-[#f7f2fe] dark:bg-[#1a4b96]/40 px-3 py-1.5 text-xs font-bold text-[#0a2f66] dark:text-white transition-all hover:bg-[#0a2f66] hover:text-white border border-[#d9e3f6] dark:border-[#1a365d]"
                         >
                           <Hexagon className="size-3.5" />
                           Receipt
@@ -168,7 +168,7 @@ export default function StudentCourseDetail({
                   ) : (
                     <Badge
                       variant="destructive"
-                      className="gap-1.5 bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-950/30 dark:text-red-400 dark:hover:bg-red-900/40 border-none px-2.5 py-1"
+                      className="gap-1.5 bg-[#fff5eb] text-red-600 hover:bg-[#ffece0] dark:bg-[#041024] dark:text-red-400 border-none px-2.5 py-1"
                     >
                       <XCircle className="size-3.5" />
                       Absent
@@ -177,7 +177,7 @@ export default function StudentCourseDetail({
                 </div>
               ))
             ) : (
-              <div className="p-6 text-center text-sm text-slate-500">
+              <div className="p-6 text-center text-sm text-[#6b6b6b] dark:text-[#8ba3c7]">
                 No classes have been held for this course yet.
               </div>
             )}

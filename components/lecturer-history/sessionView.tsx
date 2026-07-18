@@ -105,12 +105,12 @@ export default function SessionView({ selectedCourse }: SessionViewProps) {
 
   if (!selectedCourse) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 px-4 text-center bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800">
-        <BookOpen className="size-12 text-slate-300 dark:text-slate-700 mb-4" />
-        <h3 className="text-lg font-bold text-slate-700 dark:text-slate-300">
+      <div className="flex flex-col items-center justify-center py-20 px-4 text-center bg-white dark:bg-[#0a1c3a] rounded-2xl border border-dashed border-[#d9e3f6] dark:border-[#1a365d]">
+        <BookOpen className="size-12 text-[#b2b2b2] dark:text-[#8ba3c7] mb-4" />
+        <h3 className="text-lg font-bold text-[#0a2f66] dark:text-white">
           No Course Selected
         </h3>
-        <p className="text-sm font-medium text-slate-500 mt-1 max-w-sm">
+        <p className="text-sm font-medium text-[#6b6b6b] dark:text-[#8ba3c7] mt-1 max-w-sm">
           Select a course from the sidebar to view its past attendance sessions
           and export reports.
         </p>
@@ -121,8 +121,8 @@ export default function SessionView({ selectedCourse }: SessionViewProps) {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center py-20 h-full">
-        <Loader2 className="size-8 animate-spin text-indigo-600 mb-4" />
-        <p className="text-sm font-bold text-slate-500">
+        <Loader2 className="size-8 animate-spin text-[#0a2f66] dark:text-white mb-4" />
+        <p className="text-sm font-bold text-[#6b6b6b] dark:text-[#8ba3c7]">
           Loading attendance data...
         </p>
       </div>
@@ -133,7 +133,7 @@ export default function SessionView({ selectedCourse }: SessionViewProps) {
       <div className="flex flex-col items-center justify-center py-20 h-full text-center">
         <XCircle className="size-10 text-rose-500 mb-4" />
         <p className="text-lg font-bold text-rose-600">Failed to load data</p>
-        <p className="text-sm text-slate-500 mt-2">
+        <p className="text-sm text-[#6b6b6b] dark:text-[#8ba3c7] mt-2">
           The Express backend returned an error. Check your terminal!
         </p>
       </div>
@@ -149,11 +149,11 @@ export default function SessionView({ selectedCourse }: SessionViewProps) {
       />
 
       <div className="flex items-center gap-4 py-2">
-        <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1"></div>
-        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+        <div className="h-px bg-[#d9e3f6] dark:bg-[#1a365d] flex-1"></div>
+        <span className="text-xs font-bold text-[#b2b2b2] dark:text-[#8ba3c7] uppercase tracking-widest">
           Daily Sessions
         </span>
-        <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1"></div>
+        <div className="h-px bg-[#d9e3f6] dark:bg-[#1a365d] flex-1"></div>
       </div>
 
       <SessionControls

@@ -18,26 +18,26 @@ export default function AttendanceTable({
   );
 
   return (
-    <div className="rounded-2xl bg-white dark:bg-slate-900 shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
-      <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/20">
+    <div className="rounded-2xl bg-white dark:bg-[#0a1c3a] shadow-sm border border-[#d9e3f6] dark:border-[#1a365d] overflow-hidden">
+      <div className="p-4 border-b border-[#d9e3f6] dark:border-[#1a365d] flex items-center justify-between bg-[#f2f2f2]/50 dark:bg-[#041024]/50">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-[#b2b2b2] dark:text-[#8ba3c7]" />
           <input
             type="text"
             placeholder="Search matric no..."
-            className="pl-9 pr-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="pl-9 pr-4 py-2 rounded-lg border border-[#d9e3f6] dark:border-[#1a365d] bg-[#f2f2f2] dark:bg-[#041024] text-sm focus:outline-none focus:ring-2 focus:ring-[#0a2f66] dark:focus:ring-white text-[#262626] dark:text-white"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
           />
         </div>
-        <div className="text-sm font-bold text-slate-500 flex items-center gap-2">
+        <div className="text-sm font-bold text-[#6b6b6b] dark:text-[#8ba3c7] flex items-center gap-2">
           <Users className="size-4" /> {totalEnrolled} Enrolled
         </div>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
-          <thead className="bg-slate-50 dark:bg-slate-900/50 text-slate-500 dark:text-slate-400 font-bold">
+          <thead className="bg-[#f2f2f2] dark:bg-[#041024]/50 text-[#6b6b6b] dark:text-[#8ba3c7] font-bold">
             <tr>
               <th className="px-6 py-4">Matric No.</th>
               <th className="px-6 py-4">Student Name</th>
@@ -45,24 +45,24 @@ export default function AttendanceTable({
               <th className="px-6 py-4">Time In</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+          <tbody className="divide-y divide-[#f2f2f2] dark:divide-[#1a365d]">
             {filteredData.map((student) => (
               <tr
                 key={student.id}
-                className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors"
+                className="hover:bg-[#f2f2f2] dark:hover:bg-[#1a365d]/40 transition-colors"
               >
-                <td className="px-6 py-4 font-mono font-bold text-slate-700 dark:text-slate-300">
+                <td className="px-6 py-4 font-mono font-bold text-[#262626] dark:text-[#8ba3c7]">
                   {student.matric}
                 </td>
-                <td className="px-6 py-4 font-semibold text-slate-800 dark:text-slate-100">
+                <td className="px-6 py-4 font-semibold text-[#0a2f66] dark:text-white">
                   {student.name}
                 </td>
                 <td className="px-6 py-4">
                   <span
                     className={`px-2.5 py-1 rounded-md text-xs font-bold flex w-fit items-center gap-1.5 ${
                       student.status === "Present"
-                        ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400"
-                        : "bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-400"
+                        ? "bg-[#eafff0] text-emerald-700 dark:bg-[#1a365d] dark:text-emerald-400"
+                        : "bg-[#fff5eb] text-rose-700 dark:bg-[#1a365d] dark:text-rose-400"
                     }`}
                   >
                     {student.status === "Present" ? (
@@ -73,7 +73,7 @@ export default function AttendanceTable({
                     {student.status}
                   </span>
                 </td>
-                <td className="px-6 py-4 font-medium text-slate-500">
+                <td className="px-6 py-4 font-medium text-[#6b6b6b] dark:text-[#8ba3c7]">
                   {student.timeIn}
                 </td>
               </tr>

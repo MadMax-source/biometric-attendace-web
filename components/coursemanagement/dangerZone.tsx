@@ -49,13 +49,13 @@ export function DangerZone({
   };
 
   return (
-    <Card className="border-red-200 bg-red-50/50 shadow-sm">
+    <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-white/20 border-t-4 border-t-red-500 dark:border-t-red-500 shadow-sm transition-all">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-lg text-red-600">
+        <CardTitle className="flex items-center gap-2 text-lg text-red-600 dark:text-red-500">
           <AlertTriangle className="size-5" />
           Danger Zone
         </CardTitle>
-        <CardDescription className="text-red-600/80">
+        <CardDescription className="text-slate-500 dark:text-slate-400">
           Permanently remove this course, its timetable, and all associated
           attendance records from the system.
         </CardDescription>
@@ -63,7 +63,11 @@ export function DangerZone({
       <CardContent>
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="destructive" disabled={isDeleting}>
+            <Button
+              variant="destructive"
+              disabled={isDeleting}
+              className="bg-red-500 hover:bg-red-600 text-white dark:bg-red-600 dark:hover:bg-red-700 shadow-sm transition-colors"
+            >
               {isDeleting ? (
                 <Loader2 className="size-4 animate-spin mr-2" />
               ) : (
@@ -72,20 +76,24 @@ export function DangerZone({
               Delete Course
             </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent>
+          <AlertDialogContent className="dark:bg-slate-900 dark:border-slate-800">
             <AlertDialogHeader>
-              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-              <AlertDialogDescription>
+              <AlertDialogTitle className="dark:text-white">
+                Are you absolutely sure?
+              </AlertDialogTitle>
+              <AlertDialogDescription className="dark:text-slate-400">
                 This action cannot be undone. This will permanently delete{" "}
-                <strong>{courseCode}</strong> and remove all related data from
-                the servers.
+                <strong className="dark:text-white">{courseCode}</strong> and
+                remove all related data from the servers.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel className="dark:bg-transparent dark:text-slate-200 dark:border-slate-700 dark:hover:bg-slate-800">
+                Cancel
+              </AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleDelete}
-                className="bg-red-600 hover:bg-red-700 text-white"
+                className="bg-red-600 hover:bg-red-700 text-white dark:bg-red-600 dark:hover:bg-red-700 transition-colors"
               >
                 Yes, delete course
               </AlertDialogAction>

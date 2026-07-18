@@ -14,8 +14,8 @@ export default function LecturerDashboard() {
     return (
       <div className="flex h-[50vh] items-center justify-center">
         <div className="text-center animate-pulse space-y-2">
-          <div className="size-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-          <p className="text-sm font-bold text-slate-500">
+          <div className="size-8 border-4 border-[#0a2f66] dark:border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="text-sm font-bold text-[#6b6b6b] dark:text-[#8ba3c7]">
             Loading dashboard...
           </p>
         </div>

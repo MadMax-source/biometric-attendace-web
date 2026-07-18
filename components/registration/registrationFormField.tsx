@@ -38,7 +38,7 @@ export default function RegistrationFormFields({
             value={formData.firstName}
             onChange={(e) => updateField("firstName", e.target.value)}
             placeholder="Enter your First Name"
-            className="h-11 rounded-[8px] border-[#b2b2b2] px-3 text-[13px]"
+            className="h-11 rounded-[8px] border-[#b2b2b2] dark:border-[#1a365d] bg-white dark:bg-[#041024] px-3 text-[13px] text-[#262626] dark:text-white placeholder:text-[#a4a4a4] dark:placeholder:text-[#8ba3c7] focus-visible:ring-[#0a2f66] dark:focus-visible:ring-[#1a4b96] transition-all"
           />
         </Field>
         <Field label="Last Name" id="lastName">
@@ -47,7 +47,7 @@ export default function RegistrationFormFields({
             value={formData.lastName}
             onChange={(e) => updateField("lastName", e.target.value)}
             placeholder="Enter your Last Name"
-            className="h-11 rounded-[8px] border-[#b2b2b2] px-3 text-[13px]"
+            className="h-11 rounded-[8px] border-[#b2b2b2] dark:border-[#1a365d] bg-white dark:bg-[#041024] px-3 text-[13px] text-[#262626] dark:text-white placeholder:text-[#a4a4a4] dark:placeholder:text-[#8ba3c7] focus-visible:ring-[#0a2f66] dark:focus-visible:ring-[#1a4b96] transition-all"
           />
         </Field>
       </div>
@@ -65,7 +65,7 @@ export default function RegistrationFormFields({
           placeholder={
             mode === "student" ? "Enter your Matric No." : "Enter your Staff ID"
           }
-          className="h-11 rounded-[8px] border-[#b2b2b2] px-3 text-[13px]"
+          className="h-11 rounded-[8px] border-[#b2b2b2] dark:border-[#1a365d] bg-white dark:bg-[#041024] px-3 text-[13px] text-[#262626] dark:text-white placeholder:text-[#a4a4a4] dark:placeholder:text-[#8ba3c7] focus-visible:ring-[#0a2f66] dark:focus-visible:ring-[#1a4b96] transition-all"
         />
       </Field>
 
@@ -78,7 +78,7 @@ export default function RegistrationFormFields({
           placeholder={
             mode === "student" ? "Enter your Student Email" : "Enter your Email"
           }
-          className="h-11 rounded-[8px] border-[#b2b2b2] px-3 text-[13px]"
+          className="h-11 rounded-[8px] border-[#b2b2b2] dark:border-[#1a365d] bg-white dark:bg-[#041024] px-3 text-[13px] text-[#262626] dark:text-white placeholder:text-[#a4a4a4] dark:placeholder:text-[#8ba3c7] focus-visible:ring-[#0a2f66] dark:focus-visible:ring-[#1a4b96] transition-all"
         />
       </Field>
 
@@ -89,7 +89,7 @@ export default function RegistrationFormFields({
           value={formData.phoneNumber}
           onChange={(e) => updateField("phoneNumber", e.target.value)}
           placeholder="Enter your Phone Number"
-          className="h-11 rounded-[8px] border-[#b2b2b2] px-3 text-[13px]"
+          className="h-11 rounded-[8px] border-[#b2b2b2] dark:border-[#1a365d] bg-white dark:bg-[#041024] px-3 text-[13px] text-[#262626] dark:text-white placeholder:text-[#a4a4a4] dark:placeholder:text-[#8ba3c7] focus-visible:ring-[#0a2f66] dark:focus-visible:ring-[#1a4b96] transition-all"
         />
       </Field>
 
@@ -98,12 +98,16 @@ export default function RegistrationFormFields({
           value={formData.department}
           onValueChange={(value) => updateField("department", value)}
         >
-          <SelectTrigger className="h-11 rounded-[8px] border-[#b2b2b2] text-[13px]">
+          <SelectTrigger className="h-11 rounded-[8px] border-[#b2b2b2] dark:border-[#1a365d] bg-white dark:bg-[#041024] text-[#262626] dark:text-white text-[13px] focus:ring-[#0a2f66] dark:focus:ring-[#1a4b96] transition-all">
             <SelectValue placeholder="Select your Department" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white dark:bg-[#041024] border-[#d9e3f6] dark:border-[#1a365d]">
             {DEPARTMENTS.map((item) => (
-              <SelectItem key={item} value={item}>
+              <SelectItem
+                key={item}
+                value={item}
+                className="focus:bg-[#f2f2f2] dark:focus:bg-[#1a4b96] text-[#262626] dark:text-white cursor-pointer"
+              >
                 {item}
               </SelectItem>
             ))}
@@ -117,12 +121,16 @@ export default function RegistrationFormFields({
             value={formData.level}
             onValueChange={(value) => updateField("level", value)}
           >
-            <SelectTrigger className="h-11 rounded-[8px] border-[#b2b2b2] text-[13px]">
+            <SelectTrigger className="h-11 rounded-[8px] border-[#b2b2b2] dark:border-[#1a365d] bg-white dark:bg-[#041024] text-[#262626] dark:text-white text-[13px] focus:ring-[#0a2f66] dark:focus:ring-[#1a4b96] transition-all">
               <SelectValue placeholder="Select level" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white dark:bg-[#041024] border-[#d9e3f6] dark:border-[#1a365d]">
               {["100", "200", "300", "400", "500"].map((item) => (
-                <SelectItem key={item} value={item}>
+                <SelectItem
+                  key={item}
+                  value={item}
+                  className="focus:bg-[#f2f2f2] dark:focus:bg-[#1a4b96] text-[#262626] dark:text-white cursor-pointer"
+                >
                   {item}
                 </SelectItem>
               ))}
@@ -139,12 +147,12 @@ export default function RegistrationFormFields({
             value={formData.password}
             onChange={(e) => updateField("password", e.target.value)}
             placeholder="Enter your Password"
-            className="h-11 rounded-[8px] border-[#b2b2b2] px-3 pr-11 text-[13px]"
+            className="h-11 rounded-[8px] border-[#b2b2b2] dark:border-[#1a365d] bg-white dark:bg-[#041024] px-3 pr-11 text-[13px] text-[#262626] dark:text-white placeholder:text-[#a4a4a4] dark:placeholder:text-[#8ba3c7] focus-visible:ring-[#0a2f66] dark:focus-visible:ring-[#1a4b96] transition-all"
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#a4a4a4] hover:text-[#6f6f6f]"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#a4a4a4] dark:text-[#8ba3c7] hover:text-[#0a2f66] dark:hover:text-white transition-colors"
           >
             {showPassword ? (
               <EyeOff className="size-5" />
@@ -163,12 +171,12 @@ export default function RegistrationFormFields({
             value={formData.confirmPassword}
             onChange={(e) => updateField("confirmPassword", e.target.value)}
             placeholder="Confirm your Password"
-            className="h-11 rounded-[8px] border-[#b2b2b2] px-3 pr-11 text-[13px]"
+            className="h-11 rounded-[8px] border-[#b2b2b2] dark:border-[#1a365d] bg-white dark:bg-[#041024] px-3 pr-11 text-[13px] text-[#262626] dark:text-white placeholder:text-[#a4a4a4] dark:placeholder:text-[#8ba3c7] focus-visible:ring-[#0a2f66] dark:focus-visible:ring-[#1a4b96] transition-all"
           />
           <button
             type="button"
             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#a4a4a4] hover:text-[#6f6f6f]"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#a4a4a4] dark:text-[#8ba3c7] hover:text-[#0a2f66] dark:hover:text-white transition-colors"
           >
             {showConfirmPassword ? (
               <EyeOff className="size-5" />
@@ -182,7 +190,6 @@ export default function RegistrationFormFields({
   );
 }
 
-// Local Field Wrapper Component
 function Field({
   label,
   id,
@@ -194,7 +201,10 @@ function Field({
 }) {
   return (
     <div className="space-y-2">
-      <Label htmlFor={id} className="text-[14px] font-medium text-[#262626]">
+      <Label
+        htmlFor={id}
+        className="text-[14px] font-medium text-[#262626] dark:text-white"
+      >
         {label}
       </Label>
       {children}

@@ -35,7 +35,7 @@ export default function StudentCoursesPage() {
           description="Loading your enrolled courses..."
         />
         <div className="flex justify-center py-12">
-          <p className="text-slate-500 font-medium animate-pulse">
+          <p className="text-[#6b6b6b] dark:text-[#8ba3c7] font-medium animate-pulse">
             Fetching courses...
           </p>
         </div>
@@ -43,7 +43,6 @@ export default function StudentCoursesPage() {
     );
   }
 
-  // 3. Handle Errors
   if (isError) {
     return (
       <div className="space-y-6 pb-20">
@@ -55,7 +54,7 @@ export default function StudentCoursesPage() {
           <p className="text-red-500 font-medium">{isError.message}</p>
           <button
             onClick={() => refresh()}
-            className="text-sm font-bold text-[#5e3bce] hover:underline"
+            className="text-sm font-bold text-[#0a2f66] dark:text-white hover:underline"
           >
             Try Again
           </button>
@@ -73,17 +72,16 @@ export default function StudentCoursesPage() {
         />
         <button
           onClick={() => refresh()}
-          className="mt-2 p-2 text-slate-400 transition-colors hover:text-[#5e3bce] dark:hover:text-[#a98cfb]"
+          className="mt-2 p-2 text-[#b2b2b2] dark:text-[#8ba3c7] transition-colors hover:text-[#0a2f66] dark:hover:text-white"
         >
           <RefreshCw className="size-5" />
         </button>
       </div>
 
       <div className="flex flex-col gap-4">
-        {/* 4. Handle Empty Data */}
         {!courses || courses.length === 0 ? (
-          <div className="py-12 text-center border-2 border-dashed rounded-xl border-slate-200 dark:border-slate-800">
-            <p className="text-slate-500 dark:text-slate-400">
+          <div className="py-12 text-center border-2 border-dashed rounded-xl border-[#d9e3f6] dark:border-[#1a365d]">
+            <p className="text-[#6b6b6b] dark:text-[#8ba3c7]">
               You are not enrolled in any courses yet.
             </p>
           </div>
@@ -98,25 +96,25 @@ export default function StudentCoursesPage() {
                 href={`/student/courses/${c.id}`}
                 className="group block"
               >
-                <Card className="rounded-[20px] border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm transition-all duration-200 hover:border-[#5e3bce]/40 hover:shadow-md dark:hover:border-[#a98cfb]/40">
+                <Card className="rounded-[20px] border-[#d9e3f6] dark:border-[#1a365d] bg-white dark:bg-[#0a1c3a] shadow-sm transition-all duration-200 hover:border-[#0a2f66] dark:hover:border-[#8ba3c7]">
                   <CardContent className="flex items-center gap-4 sm:gap-6 p-5 sm:p-6">
-                    <div className="hidden sm:flex size-12 shrink-0 items-center justify-center rounded-xl bg-[#f0f6ff] dark:bg-blue-950/30 text-[#5a8ce6]">
+                    <div className="hidden sm:flex size-12 shrink-0 items-center justify-center rounded-xl bg-[#f2f2f2] dark:bg-[#1a4b96]/40 text-[#0a2f66] dark:text-white">
                       <BookOpen className="size-6" />
                     </div>
 
                     <div className="min-w-0 flex-1 space-y-3">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-0">
                         <div>
-                          <p className="text-lg font-black text-slate-800 dark:text-slate-100 leading-tight">
+                          <p className="text-lg font-black text-[#0a2f66] dark:text-white leading-tight">
                             {c.code}
                           </p>
-                          <p className="truncate text-sm font-medium text-slate-500 dark:text-slate-400 mt-0.5">
+                          <p className="truncate text-sm font-medium text-[#6b6b6b] dark:text-[#8ba3c7] mt-0.5">
                             {c.title}
                           </p>
                         </div>
 
                         <div className="flex items-center gap-3">
-                          <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                          <span className="text-xs font-bold uppercase tracking-wider text-[#b2b2b2] dark:text-[#8ba3c7]">
                             {c.present} / {c.total}
                           </span>
                           <span
@@ -129,11 +127,11 @@ export default function StudentCoursesPage() {
 
                       <Progress
                         value={pct}
-                        className="h-2 bg-slate-100 dark:bg-slate-800"
+                        className="h-2 [&_[data-slot=progress-track]]:bg-[#f2f2f2] dark:[&_[data-slot=progress-track]]:bg-[#1a365d] [&_[data-slot=progress-indicator]]:bg-[#0a2f66] dark:[&_[data-slot=progress-indicator]]:bg-white"
                       />
                     </div>
 
-                    <ChevronRight className="size-5 shrink-0 text-slate-300 dark:text-slate-600 transition-transform group-hover:translate-x-1 group-hover:text-[#5e3bce] dark:group-hover:text-[#a98cfb]" />
+                    <ChevronRight className="size-5 shrink-0 text-[#b2b2b2] dark:text-[#8ba3c7] transition-transform group-hover:translate-x-1 group-hover:text-[#0a2f66] dark:group-hover:text-white" />
                   </CardContent>
                 </Card>
               </Link>

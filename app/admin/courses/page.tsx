@@ -15,7 +15,6 @@ export default function CoursesPage() {
   const { courses, isLoading, refresh } = useCourses();
   const [search, setSearch] = useState("");
 
-  // Filter logic: This checks if the code or title matches the search text
   const filteredCourses = courses.filter(
     (c: any) =>
       c.course_code.toLowerCase().includes(search.toLowerCase()) ||
@@ -29,7 +28,7 @@ export default function CoursesPage() {
         description={`${filteredCourses.length} courses match your search`}
         action={
           <Button
-            className="bg-[#0c2a5d] hover:bg-[#0c2a5d]/90 text-white"
+            className="bg-[#0a2f66] hover:bg-[#0a2f66]/90 dark:bg-[#1a4b96] dark:hover:bg-[#1a4b96]/80 text-white shadow-[0_24px_80px_rgba(15,23,42,0.12)]"
             onClick={() => router.push("/admin/courses/create")}
           >
             <Plus className="size-4 mr-2" />
@@ -37,8 +36,6 @@ export default function CoursesPage() {
           </Button>
         }
       />
-
-      {/* SEARCH COMPONENT AT THE TOP */}
       <SearchInput value={search} onChange={setSearch} />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -46,7 +43,7 @@ export default function CoursesPage() {
           Array.from({ length: 6 }).map((_, i) => <CourseSkeleton key={i} />)
         ) : filteredCourses.length === 0 ? (
           <div className="col-span-full py-20 text-center">
-            <p className="text-muted-foreground">
+            <p className="text-[#6b6b6b] dark:text-[#8ba3c7]">
               No courses found matching "{search}"
             </p>
           </div>
