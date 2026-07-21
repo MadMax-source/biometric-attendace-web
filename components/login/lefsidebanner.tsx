@@ -23,6 +23,9 @@ export default function AsideBanner() {
               className="h-[320px] w-full object-cover object-center xl:h-[520px]"
             />
           </div>
+          <h1 className="mt-2 text-3xl font-semibold leading-tight text-white capitalize">
+            with offline synchronization for low-connectivity environments
+          </h1>
 
           <div className="flex flex-wrap gap-7 invisible">
             <Feature

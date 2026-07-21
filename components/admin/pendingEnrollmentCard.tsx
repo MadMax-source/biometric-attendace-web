@@ -22,7 +22,6 @@ export default function PendingEnrollmentCard({
     <div className="group relative rounded-2xl transition-all duration-300 hover:-translate-y-1">
       <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 p-5 rounded-2xl bg-white/80 dark:bg-[#0a1c3a]/80 backdrop-blur-xl border border-[#d9e3f6] dark:border-[#1a365d] shadow-sm hover:shadow-md">
         <div className="flex items-center gap-4">
-          {/* Profile Image / Initials Fallback */}
           <div className="flex size-14 shrink-0 items-center justify-center rounded-xl bg-[#f2f2f2] dark:bg-[#1a4b96]/30 text-lg font-black text-[#0a2f66] dark:text-white border border-[#d9e3f6] dark:border-[#1a365d] overflow-hidden">
             {student.profile_image ? (
               <img

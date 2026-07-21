@@ -1,7 +1,6 @@
 "use client";
 
 import { use, useState, useEffect } from "react";
-import useSWR from "swr";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import BACKENDAPI from "@/API";

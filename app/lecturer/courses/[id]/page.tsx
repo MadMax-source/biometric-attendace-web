@@ -49,11 +49,10 @@ export default function LecturerCourseDetail({
   });
 
   const [starting, setStarting] = useState(false);
-  const [ending, setEnding] = useState(false); // New state for ending session
+  const [ending, setEnding] = useState(false);
 
   // Find if this course is on today's schedule
   const scheduledClass = schedule?.find((s) => s.course_id === id);
-  // Check if it is currently active
   const isSessionActive = scheduledClass?.is_active || false;
 
   useEffect(() => {

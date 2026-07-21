@@ -10,8 +10,6 @@ import {
   Loader2,
 } from "lucide-react";
 import { useStudentAttendance } from "@/hook/useAttendance";
-
-// 1. Define an interface for the stats we will pass to the cards
 interface DashboardStats {
   totalCourses: number;
   overallPercentage: number;
@@ -23,12 +21,10 @@ interface DashboardStats {
 }
 
 export default function StudentDashboard() {
-  // --- FETCH LIVE DATA ---
   const { courses, isLoading, isError } = useStudentAttendance();
 
   const [isEnrolled, setIsEnrolled] = useState(false);
 
-  // --- HANDLE LOADING & ERROR STATES ---
   if (isLoading) {
     return (
       <div className="flex flex-col gap-8 h-full items-center justify-center py-20">
@@ -48,7 +44,6 @@ export default function StudentDashboard() {
     );
   }
 
-  // --- CALCULATE LIVE METRICS ---
   const validCourses = Array.isArray(courses) ? courses : [];
 
   const totalCourses = validCourses.length;
@@ -179,7 +174,6 @@ function ChartCard() {
   );
 }
 
-//  Updated StatCards to accept the live 'stats' object
 function StatCards({
   stacked,
   stats,

@@ -90,7 +90,7 @@ export default function AdminDashboard() {
           </CardContent>
         </Card>
 
-        {/* Recent Sessions Card */}
+        {/**/}
         <Card className="bg-white dark:bg-[#0a1c3a] border-[#d9e3f6] dark:border-[#1a365d] border-t-4 border-t-[#0a2f66] dark:border-t-white shadow-[0_24px_80px_rgba(15,23,42,0.12)] transition-all">
           <CardHeader>
             <CardTitle className="text-base text-[#0a2f66] dark:text-white">
