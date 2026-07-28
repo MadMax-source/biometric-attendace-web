@@ -8,20 +8,18 @@ import {
   Percent,
   Users,
 } from "lucide-react";
-import {
-  courses,
-  sessions,
-  students,
-  attendanceByLevel,
-} from "@/lib/mock-data";
+import { courses, sessions } from "@/lib/mock-data";
 import { PageHeader, StatCard, BarRow } from "@/components/widgets";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useAdminDashboard } from "@/hook/useAdmin";
 
 export default function AdminDashboard() {
   const activeSessions = sessions.filter((s) => s.active).length;
   const todayAttendance = sessions.reduce((sum, s) => sum + s.present, 0);
 
+  const { stats, attendanceByLevel, recentSessions, isLoading } =
+    useAdminDashboard();
   return (
     <div className="space-y-6">
       <PageHeader
@@ -32,25 +30,25 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <StatCard
           label="Total Students"
-          value={420}
+          value={stats.totalStudents}
           icon={Users}
           hint="Computer Engineering"
         />
         <StatCard
           label="Total Courses"
-          value={courses.length}
+          value={stats.totalCourses}
           icon={BookOpen}
           hint="This session"
         />
         <StatCard
           label="Today's Attendance"
-          value={351}
+          value={stats.todaysAttendance}
           icon={CalendarCheck}
           hint="Marked today"
         />
         <StatCard
           label="Active Sessions"
-          value={activeSessions}
+          value={stats.activeSessions}
           icon={Activity}
           hint="Running now"
         />
@@ -83,7 +81,7 @@ export default function AdminDashboard() {
               <span className="text-[#6b6b6b] dark:text-[#8ba3c7]">
                 Overall department attendance:{" "}
                 <span className="font-semibold text-[#0a2f66] dark:text-white">
-                  84%
+                  {stats.overallAttendance}%
                 </span>
               </span>
             </div>
@@ -98,8 +96,8 @@ export default function AdminDashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {sessions.map((s) => {
-              const course = courses.find((c) => c.id === s.courseId);
+            {recentSessions.map((s) => {
+              const course = courses.find((c) => c.id === s.course_id);
               return (
                 <div
                   key={s.id}
@@ -110,10 +108,10 @@ export default function AdminDashboard() {
                       {course?.code}
                     </p>
                     <p className="text-xs text-[#6b6b6b] dark:text-[#8ba3c7]">
-                      {s.date} · {s.startTime}
+                      {s.date} · {s.start_time} - {s.end_time}
                     </p>
                   </div>
-                  {s.active ? (
+                  {s.is_active ? (
                     <Badge className="bg-[#0a2f66] text-white hover:bg-[#0a2f66]/90 dark:bg-white dark:text-[#0a2f66] dark:hover:bg-[#d9e3f6] border-none shadow-sm transition-colors">
                       Live
                     </Badge>
@@ -122,7 +120,7 @@ export default function AdminDashboard() {
                       variant="secondary"
                       className="bg-[#f2f2f2] text-[#6b6b6b] hover:bg-[#d9e3f6] dark:bg-[#1a365d] dark:text-[#8ba3c7] dark:hover:bg-[#1a4b96]/40"
                     >
-                      {s.present} present
+                      {s.present_count} present
                     </Badge>
                   )}
                 </div>
