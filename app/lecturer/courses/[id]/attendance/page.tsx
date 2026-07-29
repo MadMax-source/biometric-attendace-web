@@ -1,7 +1,7 @@
 "use client";
 
 import { use, useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, Radio, Loader2, AlertCircle } from "lucide-react";
 import useSWR from "swr";
 
@@ -26,6 +26,9 @@ export default function TakeAttendancePage({
 }) {
   const { id } = use(params);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const urlSessionId = searchParams.get("sessionId");
 
   const {
     courses,
@@ -34,16 +37,20 @@ export default function TakeAttendancePage({
   } = useLecturerDashboard();
   const course = courses.find((c) => c.id === id);
 
-  const { data: activeSessionData, error: sessionError } = useSWR(
-    course ? `/active-session/${id}` : null,
+  const {
+    data: activeSessionData,
+    error: sessionError,
+    isLoading: isSessionLoading,
+  } = useSWR(
+    !urlSessionId && id ? `/active-session/${id}` : null,
     async (url) => {
       const res = await BACKENDAPI.get(url);
       return res.data;
     },
-    { refreshInterval: 0 },
+    { refreshInterval: 2000 },
   );
 
-  const sessionId = activeSessionData?.session?.id;
+  const sessionId = urlSessionId || activeSessionData?.session?.id;
 
   const [present, setPresent] = useState(0);
   const [offlineCount, setOfflineCount] = useState(0);
@@ -69,16 +76,11 @@ export default function TakeAttendancePage({
     addLog(`[SYSTEM] Awaiting live telemetry for ${course.code}...`);
 
     /* 
-    
-     i will use websockets to listen to the backend for live telemetry data. The backend will receive MQTT messages from the ESP32 and forward them to this frontend via WebSockets. This ensures that the frontend receives real-time updates without polling.
-     
-    /*
     const ws = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}/attendance/${sessionId}`);
     
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
       
-      // LIVE SCAN EVENT
       if (data.type === "LIVE_SCAN") {
         setPhase("processing_live");
         addLog(`[MQTT] Payload received for matric: ${data.matric}`);
@@ -97,7 +99,6 @@ export default function TakeAttendancePage({
         }, 800);
       }
 
-      // OFFLINE SYNC EVENT
       if (data.type === "OFFLINE_SYNC") {
         setPhase("processing_offline");
         addLog(`[MQTT] OFFLINE SYNC: Parsing ${data.count} records...`);
@@ -120,9 +121,9 @@ export default function TakeAttendancePage({
     */
   }, [sessionId, course]);
 
-  const isLoading = isDashboardLoading || (!sessionId && !sessionError);
-  const isError =
-    isDashboardError || sessionError || (!course && !isDashboardLoading);
+  const isLoading = isDashboardLoading || (!sessionId && isSessionLoading);
+
+  const isError = isDashboardError || (!isLoading && !sessionId);
 
   if (isLoading) {
     return (

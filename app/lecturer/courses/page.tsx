@@ -9,6 +9,7 @@ import {
   Sparkles,
   Loader2,
   AlertCircle,
+  Radio,
 } from "lucide-react";
 
 interface Course {
@@ -17,12 +18,14 @@ interface Course {
   title: string;
   level: number;
   enrolled_count: number;
+  is_active?: boolean;
+  active_session_id?: string | null;
 }
 
 export default function LecturerCoursesPage() {
   const { courses, isError, isLoading } = useLecturerDashboard();
 
-  const myCourses = courses || [];
+  const myCourses: Course[] = courses || [];
 
   if (isLoading) {
     return (
@@ -79,7 +82,11 @@ export default function LecturerCoursesPage() {
           {myCourses.map((c) => (
             <div
               key={c.id}
-              className="group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-white dark:bg-[#0a1c3a] p-6 shadow-[0_24px_80px_rgba(15,23,42,0.12)] border border-[#d9e3f6] dark:border-[#1a365d] hover:-translate-y-1 transition-all duration-300"
+              className={`group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-white dark:bg-[#0a1c3a] p-6 shadow-[0_24px_80px_rgba(15,23,42,0.12)] border transition-all duration-300 hover:-translate-y-1 ${
+                c.is_active
+                  ? "border-[#0a2f66] dark:border-[#8ba3c7] ring-1 ring-[#0a2f66]/60 dark:ring-white/10"
+                  : "border-[#d9e3f6] dark:border-[#1a365d]"
+              }`}
             >
               <div className="absolute -top-6 -right-6 p-4 opacity-5 group-hover:opacity-10 transition-opacity group-hover:scale-110 duration-500 text-[#0a2f66] dark:text-white">
                 <BookOpen className="size-32" />
@@ -90,9 +97,16 @@ export default function LecturerCoursesPage() {
                   <div className="flex size-12 items-center justify-center rounded-xl bg-[#f2f2f2] dark:bg-[#1a4b96]/40 text-[#0a2f66] dark:text-white shadow-sm">
                     <BookOpen className="size-6" />
                   </div>
-                  <span className="inline-flex items-center rounded-md bg-[#f2f2f2] dark:bg-[#041024] px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-[#6b6b6b] dark:text-[#8ba3c7]">
-                    {c.level} Level
-                  </span>
+                  <div className="flex items-center gap-2">
+                    {c.is_active && (
+                      <span className="flex items-center gap-1 text-[10px] font-black uppercase tracking-wider bg-[#0a2f66] dark:bg-white text-white dark:text-[#0a2f66] px-2 py-1 rounded-md animate-pulse">
+                        <Radio className="size-3" /> LIVE
+                      </span>
+                    )}
+                    <span className="inline-flex items-center rounded-md bg-[#f2f2f2] dark:bg-[#041024] px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-[#6b6b6b] dark:text-[#8ba3c7]">
+                      {c.level} Level
+                    </span>
+                  </div>
                 </div>
 
                 <div className="space-y-1.5 mb-6 relative z-10">
@@ -111,12 +125,21 @@ export default function LecturerCoursesPage() {
                   {c.enrolled_count} Enrolled
                 </span>
 
-                <Link
-                  href={`/lecturer/courses/${c.id}`}
-                  className="flex items-center justify-center gap-2 rounded-lg bg-[#f2f2f2] dark:bg-[#1a4b96]/40 px-4 py-2 text-xs font-bold text-[#0a2f66] dark:text-white hover:bg-[#0a2f66] hover:text-white dark:hover:bg-[#1a4b96] transition-all"
-                >
-                  Open <ArrowRight className="size-3.5" />
-                </Link>
+                {c.is_active ? (
+                  <Link
+                    href={`/lecturer/courses/${c.id}/attendance?sessionId=${c.active_session_id || ""}`}
+                    className="flex items-center justify-center gap-2 rounded-lg bg-[#0a2f66] dark:bg-[#1a4b96] px-4 py-2 text-xs font-bold text-white shadow-md hover:bg-[#0a2f66]/90 active:scale-95 transition-all animate-pulse"
+                  >
+                    <Radio className="size-3.5" /> Live View
+                  </Link>
+                ) : (
+                  <Link
+                    href={`/lecturer/courses/${c.id}`}
+                    className="flex items-center justify-center gap-2 rounded-lg bg-[#f2f2f2] dark:bg-[#1a4b96]/40 px-4 py-2 text-xs font-bold text-[#0a2f66] dark:text-white hover:bg-[#0a2f66] hover:text-white dark:hover:bg-[#1a4b96] transition-all"
+                  >
+                    Open <ArrowRight className="size-3.5" />
+                  </Link>
+                )}
               </div>
             </div>
           ))}

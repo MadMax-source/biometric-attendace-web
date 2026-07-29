@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useLecturerDashboard } from "@/hook/useLecturerDashboard";
 import { ArrowLeft, Loader2, AlertCircle, Radio } from "lucide-react";
 import { toast } from "sonner";
+import useSWR from "swr";
 import BACKENDAPI from "@/API";
 import { CourseHeader } from "@/components/attendance-kiosk/kioskHeader";
 import { SessionSetupForm } from "@/components/attendance-kiosk/sessionSetupForm";
@@ -51,9 +52,19 @@ export default function LecturerCourseDetail({
   const [starting, setStarting] = useState(false);
   const [ending, setEnding] = useState(false);
 
-  // Find if this course is on today's schedule
+  const { data: activeSessionData } = useSWR(
+    course ? `/active-session/${id}` : null,
+    async (url) => {
+      const res = await BACKENDAPI.get(url);
+      return res.data;
+    },
+    { refreshInterval: 5000 },
+  );
+
+  const activeSession = activeSessionData?.session;
+  const isSessionActive = !!activeSession;
+
   const scheduledClass = schedule?.find((s) => s.course_id === id);
-  const isSessionActive = scheduledClass?.is_active || false;
 
   useEffect(() => {
     if (scheduledClass) {
@@ -98,25 +109,22 @@ export default function LecturerCourseDetail({
   }
 
   async function endSession() {
+    setEnding(true);
     try {
-      const activeSessionResponse = await BACKENDAPI.get(
-        `/active-session/${course?.id}`,
-      );
-      if (activeSessionResponse?.status === 200) {
-        const sessionId = activeSessionResponse?.data?.session?.id;
-        if (!sessionId) {
-          toast.error("No active session found to end.");
-          return;
-        }
-        const response = await BACKENDAPI.post("/end-session", {
-          courseId: course?.id,
-          sessionId: sessionId,
-        });
+      const sessionId = activeSession?.id;
+      if (!sessionId) {
+        toast.error("No active session found to end.");
+        setEnding(false);
+        return;
+      }
+      const response = await BACKENDAPI.post("/end-session", {
+        courseId: course?.id,
+        sessionId: sessionId,
+      });
 
-        if (response?.status === 200) {
-          toast.success("Session ended successfully");
-          window.location.reload();
-        }
+      if (response?.status === 200) {
+        toast.success("Session ended successfully");
+        window.location.reload();
       }
     } catch (error: any) {
       toast.error(error?.response?.data?.error || "Failed to end session");
@@ -189,9 +197,12 @@ export default function LecturerCourseDetail({
             can resume scanning or end the session to close attendance.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            {/* THE RESUME SCANNER BUTTON */}
             <button
               onClick={() =>
-                router.push(`/lecturer/courses/${course?.id}/attendance`)
+                router.push(
+                  `/lecturer/courses/${course?.id}/attendance?sessionId=${activeSession?.id}`,
+                )
               }
               className="w-full sm:w-auto rounded-lg bg-[#0a2f66] dark:bg-[#1a4b96] px-8 py-3 text-sm font-bold text-white hover:bg-[#0a2f66]/90 dark:hover:bg-[#1a4b96]/80 transition-colors shadow-sm"
             >
