@@ -34,6 +34,7 @@ export function useAdminDashboard() {
 
   const stats = {
     totalStudents: extractedData.total_students || 0,
+    totalLecturers: extractedData.total_lecturers || 0,
     totalCourses: extractedData.total_courses || 0,
     todaysAttendance: extractedData.todays_attendance || 0,
     activeSessions: extractedData.active_sessions_count || 0,

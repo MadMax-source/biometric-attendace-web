@@ -27,7 +27,13 @@ export default function AdminDashboard() {
         description="Department-wide attendance at a glance."
       />
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 ">
+        <StatCard
+          label="Total Lecturers"
+          value={stats.totalLecturers}
+          icon={Users}
+          hint="Computer Engineering"
+        />
         <StatCard
           label="Total Students"
           value={stats.totalStudents}
