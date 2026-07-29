@@ -12,6 +12,7 @@ export interface DashboardCourse {
 
 export interface TodaySchedule {
   id: string;
+  session_id: string;
   course_id: string;
   code: string;
   title: string;
