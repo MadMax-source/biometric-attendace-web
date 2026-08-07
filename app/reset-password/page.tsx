@@ -60,7 +60,9 @@ export default function ResetPasswordPage() {
     <main className="min-h-screen bg-[#a1c6ea] p-4 flex items-center justify-center">
       <section className="w-full max-w-md rounded-3xl bg-white p-8 shadow-2xl">
         <div className="mb-6 text-center">
-          <h1 className="text-2xl font-semibold text-[#0c2a5d]">Set a new password</h1>
+          <h1 className="text-2xl font-semibold text-[#0c2a5d]">
+            Set a new password
+          </h1>
           <p className="mt-2 text-sm text-slate-600">
             Choose a new password for your account.
           </p>
@@ -68,12 +70,16 @@ export default function ResetPasswordPage() {
 
         {!tokenReady ? (
           <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-700">
-            The reset link is incomplete. Please use the link sent to your email.
+            The reset link is incomplete. Please use the link sent to your
+            email.
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="mb-2 block text-sm font-medium text-slate-700" htmlFor="password">
+              <label
+                className="mb-2 block text-sm font-medium text-slate-700"
+                htmlFor="password"
+              >
                 New password
               </label>
               <Input
@@ -87,7 +93,10 @@ export default function ResetPasswordPage() {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-slate-700" htmlFor="confirmPassword">
+              <label
+                className="mb-2 block text-sm font-medium text-slate-700"
+                htmlFor="confirmPassword"
+              >
                 Confirm password
               </label>
               <Input
