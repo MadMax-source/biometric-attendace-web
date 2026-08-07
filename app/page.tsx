@@ -49,10 +49,15 @@ export default function LoginPage() {
       });
       const data = response.data;
       if (data?.token) {
+        const normalizedUser = {
+          ...data,
+          imageurl:
+            data?.imageurl || data?.imageprofile || data?.profile_image || "",
+        };
         localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data));
-        setUser(data);
-        toast.success(`Welcome back, ${data.fullName}!`);
+        localStorage.setItem("user", JSON.stringify(normalizedUser));
+        setUser(normalizedUser);
+        toast.success(`Welcome back, ${normalizedUser.fullName}!`);
       }
     } catch (error: any) {
       toast.error(error.response?.data?.error || "Login failed.");

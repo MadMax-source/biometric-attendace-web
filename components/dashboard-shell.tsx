@@ -158,7 +158,7 @@ export function DashboardShell({
                   <img
                     src={user.imageurl}
                     alt="Profile"
-                    className="size-full rounded-full object-cover"
+                    className="size-full rounded-full object-contain"
                   />
                 ) : (
                   <span className="font-semibold text-[#0a2f66] dark:text-white">

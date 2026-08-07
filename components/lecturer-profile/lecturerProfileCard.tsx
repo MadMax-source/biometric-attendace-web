@@ -28,7 +28,7 @@ export default function LecturerProfileCard({
               <img
                 src={user.imageUrl}
                 alt={user.fullName}
-                className="size-full object-cover"
+                className="size-full object-contain"
               />
             ) : null}
           </div>
