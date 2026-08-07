@@ -73,14 +73,14 @@ export function TodayScheduleList({
 
               {s.is_active ? (
                 <Link
-                  href={`/lecturer/courses/${s.course_id}/attendance`}
+                  href={`/lecturer/courses/${s.course_id}/attendance?sessionId=${s.session_id || s.id}`}
                   className="flex items-center justify-center gap-2 rounded-lg bg-[#0a2f66] dark:bg-[#1a4b96] px-4 py-2.5 text-sm font-bold text-white shadow-md hover:bg-[#0a2f66]/90 active:scale-95 transition-all sm:self-auto self-start"
                 >
                   <Radio className="size-4 animate-pulse" /> Live View
                 </Link>
               ) : (
                 <Link
-                  href={`/lecturer/courses/${s.course_id}/attendance`}
+                  href={`/lecturer/courses/${s.course_id}/attendance?sessionId=${s.session_id || s.id}`}
                   className="flex items-center justify-center gap-2 rounded-lg bg-[#f2f2f2] dark:bg-[#1a365d] px-4 py-2.5 text-sm font-bold text-[#0a2f66] dark:text-white hover:bg-[#d9e3f6] dark:hover:bg-[#1a365d]/80 transition-colors sm:self-auto self-start"
                 >
                   Prepare <ArrowRight className="size-4" />

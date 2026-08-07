@@ -88,10 +88,16 @@ export default function LoginPage() {
                 {submitting ? "Logging in..." : "Login"}
               </Button>
 
-              <div className="text-center text-[14px] mt-4">
+              <div className="text-center text-[14px] mt-4 space-y-2">
+                <Link
+                  href="/forgot-password"
+                  className="block text-[#0c2a5d] font-semibold hover:underline transition-colors"
+                >
+                  Forgot password?
+                </Link>
                 <Link
                   href="/Registration"
-                  className="text-[#0c2a5d] font-semibold hover:underline transition-colors"
+                  className="block text-[#0c2a5d] font-semibold hover:underline transition-colors"
                 >
                   New? Register Here
                 </Link>
