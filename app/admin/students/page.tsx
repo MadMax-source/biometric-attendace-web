@@ -22,26 +22,37 @@ export default function StudentsPage() {
 
   const { studentLists, isLoading, isError } = useStudents();
 
-  //this is for enrollment i will link it with backeend later
-
+  // Handles starting ("start") and stopping ("end") the ESP32 biometric capture loop
   const handleTriggerEnrollment = async (
     studentId: string,
     matricNumber: string,
+    action: "start" | "end",
   ) => {
-    setEnrollingId(studentId);
+    // If starting, flag this student as enrolling; if stopping, clear the state immediately
+    if (action === "start") {
+      setEnrollingId(studentId);
+    } else {
+      setEnrollingId(null);
+    }
+
     try {
       const response = await BACKENDAPI.post(`/enrollment`, {
         studentId,
         matricNumber,
+        action, // "start" | "end" sent to backend -> ESP32
       });
+
       if (response.status === 200) {
-        console.log("Enrollment successful for student:", studentId);
+        console.log(
+          `Enrollment [${action}] successful for student:`,
+          studentId,
+        );
       } else {
-        console.error("Enrollment failed:", response.data);
+        console.error(`Enrollment [${action}] failed:`, response.data);
       }
     } catch (error) {
-      console.error("Failed to trigger enrollment:", error);
-    } finally {
+      console.error(`Failed to trigger enrollment [${action}]:`, error);
+      // Reset enrolling state if network request fails
       setEnrollingId(null);
     }
   };
@@ -52,7 +63,7 @@ export default function StudentsPage() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[#a9c8f4]/20 rounded-full blur-3xl animate-pulse"></div>
         <Loader2 className="size-12 animate-spin text-[#0a2f66] dark:text-[#8ba3c7] mb-4 relative z-10" />
         <p className="text-lg font-bold text-[#0a2f66] dark:text-white relative z-10">
-          loading students...
+          Loading students...
         </p>
         <p className="text-sm text-[#6b6b6b] dark:text-[#8ba3c7] relative z-10">
           Retrieving enrollment records
@@ -80,7 +91,6 @@ export default function StudentsPage() {
     );
   }
 
-  // Fallback to empty array just in case  there is no student
   const searchedStudents = (studentLists || []).filter(
     (s: Students) =>
       s.full_name?.toLowerCase().includes(query.toLowerCase()) ||
@@ -88,7 +98,6 @@ export default function StudentsPage() {
   );
 
   const pendingStudents = searchedStudents.filter((s: Students) => !s.enrolled);
-
   const enrolledStudents = searchedStudents.filter((s: Students) => s.enrolled);
 
   return (
@@ -145,7 +154,6 @@ export default function StudentsPage() {
                   className="flex items-center justify-between p-4 rounded-xl bg-white/60 dark:bg-[#0a1c3a]/40 backdrop-blur-sm border border-[#d9e3f6] dark:border-[#1a365d] shadow-sm"
                 >
                   <div className="flex items-center gap-4">
-                    {/* Small Profile Image / Initials Fallback */}
                     <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[#f2f2f2] dark:bg-[#1a4b96]/30 border border-[#d9e3f6] dark:border-[#1a365d] text-[#0a2f66] dark:text-[#8ba3c7] font-bold text-sm overflow-hidden">
                       {s.profile_image ? (
                         <img

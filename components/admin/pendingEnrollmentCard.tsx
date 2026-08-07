@@ -1,10 +1,22 @@
-import { ScanFace, Fingerprint, Loader2, Focus } from "lucide-react";
+"use client";
+
+import {
+  ScanFace,
+  Fingerprint,
+  Loader2,
+  Focus,
+  StopCircle,
+} from "lucide-react";
 import { Students } from "@/hook/useStudent";
 
 interface PendingEnrollmentCardProps {
   student: Students;
   isEnrolling: boolean;
-  onTriggerEnrollment: (studentId: string, matric: string) => void;
+  onTriggerEnrollment: (
+    studentId: string,
+    matric: string,
+    command: "start" | "end",
+  ) => void;
 }
 
 export default function PendingEnrollmentCard({
@@ -17,6 +29,11 @@ export default function PendingEnrollmentCard({
     .map((n: string) => n[0])
     .join("")
     .substring(0, 2);
+
+  const handleToggle = () => {
+    const command = isEnrolling ? "end" : "start";
+    onTriggerEnrollment(student.id, student.matric_number, command);
+  };
 
   return (
     <div className="group relative rounded-2xl transition-all duration-300 hover:-translate-y-1">
@@ -51,20 +68,22 @@ export default function PendingEnrollmentCard({
 
         <div className="flex flex-wrap items-center gap-4 w-full sm:w-auto mt-2 sm:mt-0">
           <button
-            onClick={() =>
-              onTriggerEnrollment(student.id, student.matric_number)
-            }
-            disabled={isEnrolling}
-            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#0a2f66] dark:bg-[#1a4b96] text-white text-sm font-bold shadow-[0_24px_80px_rgba(15,23,42,0.12)] hover:bg-[#0a2f66]/90 dark:hover:bg-[#1a4b96]/80 transition-all active:scale-95 disabled:opacity-70 disabled:hover:bg-[#0a2f66] dark:disabled:hover:bg-[#1a4b96]"
+            onClick={handleToggle}
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold shadow-md transition-all active:scale-95 ${
+              isEnrolling
+                ? "bg-rose-600 hover:bg-rose-700 text-white animate-pulse"
+                : "bg-[#0a2f66] dark:bg-[#1a4b96] text-white hover:bg-[#0a2f66]/90 dark:hover:bg-[#1a4b96]/80"
+            }`}
           >
             {isEnrolling ? (
               <>
                 <Loader2 className="size-4 animate-spin" />
-                Enrolling...
+                <span>Stop Capturing</span>
               </>
             ) : (
               <>
-                <Focus className="size-4" /> Capture Biometrics
+                <Focus className="size-4" />
+                <span>Capture Biometrics</span>
               </>
             )}
           </button>
