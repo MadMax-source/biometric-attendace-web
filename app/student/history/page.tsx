@@ -181,7 +181,7 @@ export default function HistoryPage() {
                         {h.transactionHash && (
                           <button
                             onClick={() => setSelectedReceipt(h)}
-                            className="flex items-center gap-1.5 rounded-lg bg-[#f7f2fe] dark:bg-[#1a4b96]/40 px-3 py-1.5 text-xs font-bold text-[#0a2f66] dark:text-white transition-all hover:bg-[#0a2f66] hover:text-white border border-[#d9e3f6] dark:border-[#1a365d]"
+                            className="flex items-center gap-1.5 rounded-lg bg-[#f0f6ff] dark:bg-[#1a4b96]/40 px-3 py-1.5 text-xs font-bold text-[#0a2f66] dark:text-white transition-all hover:bg-[#0a2f66] hover:text-white border border-[#d9e3f6] dark:border-[#1a365d]"
                           >
                             <Hexagon className="size-3.5" />
                             Receipt
