@@ -5,6 +5,7 @@ export interface LecturerData {
   staffId: string;
   email: string;
   department: string;
+  imageUrl?: string;
 }
 
 interface LecturerProfileCardProps {
@@ -20,9 +21,17 @@ export default function LecturerProfileCard({
 }: LecturerProfileCardProps) {
   return (
     <div className="flex w-full justify-center xl:justify-start">
-      <div className="sticky top-8 w-full max-w-[500px] rounded-[30px] bg-white dark:bg-[#0a1c3a] px-8 py-10 shadow-[0_24px_80px_rgba(15,23,42,0.12)] border border-[#d9e3f6] dark:border-[#1a365d]">
+      <div className="sticky top-8 w-full max-w-xl rounded-[30px] bg-white dark:bg-[#0a1c3a] px-8 py-10 shadow-[0_24px_80px_rgba(15,23,42,0.12)] border border-[#d9e3f6] dark:border-[#1a365d]">
         <div className="relative mx-auto mb-10 size-28">
-          <div className="size-full rounded-full border-4 border-white dark:border-[#0a1c3a] bg-[#f2f2f2] dark:bg-[#1a365d] shadow-sm"></div>
+          <div className="size-full overflow-hidden rounded-full border-4 border-white dark:border-[#0a1c3a] bg-[#f2f2f2] dark:bg-[#1a365d] shadow-sm">
+            {user?.imageUrl ? (
+              <img
+                src={user.imageUrl}
+                alt={user.fullName}
+                className="size-full object-cover"
+              />
+            ) : null}
+          </div>
           <button
             onClick={onProfilePictureChange}
             className="absolute bottom-0 right-0 flex size-8 items-center justify-center rounded-full border-2 border-white dark:border-[#0a1c3a] bg-[#0a2f66] dark:bg-[#1a4b96] text-white hover:bg-[#0a2f66]/90 dark:hover:bg-[#1a4b96]/80 transition-colors"

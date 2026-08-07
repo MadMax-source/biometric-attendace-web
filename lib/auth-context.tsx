@@ -60,9 +60,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem("token");
   };
 
+  const persistUser = (nextUser: User) => {
+    setUser(nextUser);
+    localStorage.setItem("user", JSON.stringify(nextUser));
+  };
+
   return (
     <AuthContext.Provider
-      value={{ user, loading, login, logout, setLoading, setUser }}
+      value={{
+        user,
+        loading,
+        login,
+        logout,
+        setLoading,
+        setUser: persistUser,
+      }}
     >
       {children}
     </AuthContext.Provider>

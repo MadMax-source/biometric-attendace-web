@@ -59,7 +59,7 @@ export function DashboardShell({
     <div className="min-h-screen bg-[#a9c8f4] dark:bg-[#041024] lg:grid lg:grid-cols-[260px_1fr] font-sans transition-colors duration-300">
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 w-[260px] -translate-x-full bg-white dark:bg-[#0a1c3a] text-[#0a2f66] dark:text-white transition-transform lg:static lg:translate-x-0 shadow-[0_24px_80px_rgba(15,23,42,0.12)] lg:shadow-none",
+          "fixed inset-y-0 left-0 z-40 w-65 -translate-x-full bg-white dark:bg-[#0a1c3a] text-[#0a2f66] dark:text-white transition-transform lg:static lg:translate-x-0 shadow-[0_24px_80px_rgba(15,23,42,0.12)] lg:shadow-none",
           open && "translate-x-0",
         )}
       >

@@ -25,7 +25,10 @@ export default function LecturerDashboard() {
 
   return (
     <div className="flex flex-col gap-8 pb-10 max-w-7xl mx-auto">
-      <WelcomeHeader lecturerName={user?.fullName || "Lecturer"} />
+      <WelcomeHeader
+        lecturerName={user?.fullName || "Lecturer"}
+        avatarUrl={user?.imageurl}
+      />
       <DashboardStats stats={stats} />
       <div className="grid grid-cols-1 items-start gap-6 xl:grid-cols-[1.5fr_1fr]">
         <TodayScheduleList schedules={schedule} />
