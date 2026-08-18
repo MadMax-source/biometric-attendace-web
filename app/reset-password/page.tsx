@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import BACKENDAPI from "@/API";
 
-export default function ResetPasswordPage() {
+// 1. Separate the logic that uses useSearchParams into its own component
+function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [password, setPassword] = useState("");
@@ -57,6 +58,63 @@ export default function ResetPasswordPage() {
   };
 
   return (
+    <>
+      {!tokenReady ? (
+        <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-700">
+          The reset link is incomplete. Please use the link sent to your email.
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label
+              className="mb-2 block text-sm font-medium text-slate-700"
+              htmlFor="password"
+            >
+              New password
+            </label>
+            <Input
+              id="password"
+              type="password"
+              placeholder="Enter new password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="h-11"
+            />
+          </div>
+
+          <div>
+            <label
+              className="mb-2 block text-sm font-medium text-slate-700"
+              htmlFor="confirmPassword"
+            >
+              Confirm password
+            </label>
+            <Input
+              id="confirmPassword"
+              type="password"
+              placeholder="Confirm new password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="h-11"
+            />
+          </div>
+
+          <Button
+            type="submit"
+            disabled={submitting}
+            className="h-12 w-full bg-[#0c2a5d] hover:bg-[#0c2a5d]/90 text-white"
+          >
+            {submitting ? "Updating..." : "Update password"}
+          </Button>
+        </form>
+      )}
+    </>
+  );
+}
+
+// 2. Wrap the component in Suspense in the default export
+export default function ResetPasswordPage() {
+  return (
     <main className="min-h-screen bg-[#a1c6ea] p-4 flex items-center justify-center">
       <section className="w-full max-w-md rounded-3xl bg-white p-8 shadow-2xl">
         <div className="mb-6 text-center">
@@ -68,56 +126,15 @@ export default function ResetPasswordPage() {
           </p>
         </div>
 
-        {!tokenReady ? (
-          <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-700">
-            The reset link is incomplete. Please use the link sent to your
-            email.
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label
-                className="mb-2 block text-sm font-medium text-slate-700"
-                htmlFor="password"
-              >
-                New password
-              </label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Enter new password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="h-11"
-              />
+        <Suspense
+          fallback={
+            <div className="text-center text-sm text-slate-600">
+              Loading form...
             </div>
-
-            <div>
-              <label
-                className="mb-2 block text-sm font-medium text-slate-700"
-                htmlFor="confirmPassword"
-              >
-                Confirm password
-              </label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                placeholder="Confirm new password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="h-11"
-              />
-            </div>
-
-            <Button
-              type="submit"
-              disabled={submitting}
-              className="h-12 w-full bg-[#0c2a5d] hover:bg-[#0c2a5d]/90 text-white"
-            >
-              {submitting ? "Updating..." : "Update password"}
-            </Button>
-          </form>
-        )}
+          }
+        >
+          <ResetPasswordForm />
+        </Suspense>
       </section>
     </main>
   );
