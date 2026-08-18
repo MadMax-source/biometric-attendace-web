@@ -9,6 +9,7 @@ import {
   Database,
   Loader2,
   AlertTriangle,
+  Info, // Added for the info toast
 } from "lucide-react";
 import BACKENDAPI from "@/API";
 
@@ -19,17 +20,29 @@ import { useStudents, Students } from "@/hook/useStudent";
 export default function StudentsPage() {
   const [query, setQuery] = useState("");
   const [enrollingId, setEnrollingId] = useState<string | null>(null);
+  const [enrollError, setEnrollError] = useState<{
+    id: string;
+    message: string;
+  } | null>(null);
+
+  // NEW: State for our custom beautiful toast notification
+  const [toastMessage, setToastMessage] = useState<{
+    title: string;
+    message: string;
+    type: "success" | "info";
+  } | null>(null);
 
   const { studentLists, isLoading, isError } = useStudents();
 
-  // Handles starting ("start") and stopping ("end") the ESP32 biometric capture loop
   const handleTriggerEnrollment = async (
     studentId: string,
     matricNumber: string,
-    action: "start" | "end",
+    command: "start" | "end",
   ) => {
-    // If starting, flag this student as enrolling; if stopping, clear the state immediately
-    if (action === "start") {
+    setEnrollError(null);
+    setToastMessage(null); // Clear any existing toast
+
+    if (command === "start") {
       setEnrollingId(studentId);
     } else {
       setEnrollingId(null);
@@ -39,21 +52,46 @@ export default function StudentsPage() {
       const response = await BACKENDAPI.post(`/enrollment`, {
         studentId,
         matricNumber,
-        action, // "start" | "end" sent to backend -> ESP32
+        command,
       });
 
       if (response.status === 200) {
         console.log(
-          `Enrollment [${action}] successful for student:`,
+          `Enrollment [${command}] successful for student:`,
           studentId,
         );
-      } else {
-        console.error(`Enrollment [${action}] failed:`, response.data);
+
+        // NEW: Trigger the custom toast instead of the ugly alert()
+        if (command === "start") {
+          setToastMessage({
+            title: "Capturing Started",
+            message: `Kiosk is now recording biometrics for ${matricNumber}`,
+            type: "success",
+          });
+        } else {
+          setToastMessage({
+            title: "Capturing Stopped",
+            message: `Kiosk has been deactivated for ${matricNumber}`,
+            type: "info",
+          });
+        }
+
+        // Auto-hide the toast after 4 seconds
+        setTimeout(() => {
+          setToastMessage(null);
+        }, 4000);
       }
-    } catch (error) {
-      console.error(`Failed to trigger enrollment [${action}]:`, error);
-      // Reset enrolling state if network request fails
+    } catch (error: any) {
+      console.error(`Failed to trigger enrollment [${command}]:`, error);
+
       setEnrollingId(null);
+      const errorMessage =
+        error.response?.data?.error || "Failed to connect to kiosk";
+      setEnrollError({ id: studentId, message: errorMessage });
+
+      setTimeout(() => {
+        setEnrollError(null);
+      }, 4000);
     }
   };
 
@@ -102,6 +140,34 @@ export default function StudentsPage() {
 
   return (
     <div className="relative min-h-[80vh] w-full p-4 sm:p-8 rounded-3xl overflow-hidden bg-[#f2f2f2] dark:bg-[#041024]">
+      {/* NEW: Custom Toast Notification UI */}
+      {toastMessage && (
+        <div
+          className={`fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-xl border transition-all duration-300 animate-in fade-in slide-in-from-top-10
+            ${
+              toastMessage.type === "success"
+                ? "bg-[#eafff0] dark:bg-emerald-900/40 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300"
+                : "bg-blue-50 dark:bg-blue-900/40 border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300"
+            }
+          `}
+        >
+          {toastMessage.type === "success" ? (
+            <CheckCircle2 className="size-5 shrink-0" />
+          ) : (
+            <Info className="size-5 shrink-0" />
+          )}
+          <div className="flex flex-col">
+            <span className="text-sm font-black tracking-tight">
+              {toastMessage.title}
+            </span>
+            <span className="text-xs font-semibold opacity-90">
+              {toastMessage.message}
+            </span>
+          </div>
+        </div>
+      )}
+
+      {/* Background Blurs */}
       <div className="absolute -top-20 -left-20 w-96 h-96 bg-[#a9c8f4]/40 dark:bg-[#1a4b96]/20 rounded-full mix-blend-multiply filter blur-3xl opacity-60"></div>
       <div className="absolute top-40 -right-20 w-96 h-96 bg-[#d9e3f6]/40 dark:bg-[#1a365d]/40 rounded-full mix-blend-multiply filter blur-3xl opacity-50"></div>
 
@@ -129,6 +195,9 @@ export default function StudentsPage() {
                   key={s.id}
                   student={s}
                   isEnrolling={enrollingId === s.id}
+                  errorMessage={
+                    enrollError?.id === s.id ? enrollError.message : undefined
+                  }
                   onTriggerEnrollment={handleTriggerEnrollment}
                 />
               ))}

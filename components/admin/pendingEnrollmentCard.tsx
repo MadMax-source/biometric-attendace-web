@@ -3,15 +3,16 @@
 import {
   ScanFace,
   Fingerprint,
-  Loader2,
   Focus,
   StopCircle,
+  AlertTriangle,
 } from "lucide-react";
 import { Students } from "@/hook/useStudent";
 
 interface PendingEnrollmentCardProps {
   student: Students;
   isEnrolling: boolean;
+  errorMessage?: string;
   onTriggerEnrollment: (
     studentId: string,
     matric: string,
@@ -22,6 +23,7 @@ interface PendingEnrollmentCardProps {
 export default function PendingEnrollmentCard({
   student,
   isEnrolling,
+  errorMessage,
   onTriggerEnrollment,
 }: PendingEnrollmentCardProps) {
   const initials = student.full_name
@@ -31,6 +33,7 @@ export default function PendingEnrollmentCard({
     .substring(0, 2);
 
   const handleToggle = () => {
+    if (errorMessage) return;
     const command = isEnrolling ? "end" : "start";
     onTriggerEnrollment(student.id, student.matric_number, command);
   };
@@ -69,15 +72,23 @@ export default function PendingEnrollmentCard({
         <div className="flex flex-wrap items-center gap-4 w-full sm:w-auto mt-2 sm:mt-0">
           <button
             onClick={handleToggle}
+            disabled={!!errorMessage}
             className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold shadow-md transition-all active:scale-95 ${
-              isEnrolling
-                ? "bg-rose-600 hover:bg-rose-700 text-white animate-pulse"
-                : "bg-[#0a2f66] dark:bg-[#1a4b96] text-white hover:bg-[#0a2f66]/90 dark:hover:bg-[#1a4b96]/80"
+              errorMessage
+                ? "bg-red-500 text-white cursor-not-allowed opacity-90"
+                : isEnrolling
+                  ? "bg-rose-600 hover:bg-rose-700 text-white animate-pulse"
+                  : "bg-[#0a2f66] dark:bg-[#1a4b96] text-white hover:bg-[#0a2f66]/90 dark:hover:bg-[#1a4b96]/80"
             }`}
           >
-            {isEnrolling ? (
+            {errorMessage ? (
               <>
-                <Loader2 className="size-4 animate-spin" />
+                <AlertTriangle className="size-4" />
+                <span>{errorMessage}</span>
+              </>
+            ) : isEnrolling ? (
+              <>
+                <StopCircle className="size-4" />
                 <span>Stop Capturing</span>
               </>
             ) : (
