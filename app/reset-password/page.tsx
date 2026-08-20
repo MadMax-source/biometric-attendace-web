@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import BACKENDAPI from "@/API";
 
-// 1. Separate the logic that uses useSearchParams into its own component
+//  Separate the logic that uses useSearchParams into its own component
 function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -112,7 +112,7 @@ function ResetPasswordForm() {
   );
 }
 
-// 2. Wrap the component in Suspense in the default export
+//  Wrap the component in Suspense in the default export
 export default function ResetPasswordPage() {
   return (
     <main className="min-h-screen bg-[#a1c6ea] p-4 flex items-center justify-center">

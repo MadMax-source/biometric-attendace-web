@@ -10,6 +10,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { useStudentAttendance } from "@/hook/useAttendance";
+import { useAuth } from "@/lib/auth-context";
 interface DashboardStats {
   totalCourses: number;
   overallPercentage: number;
@@ -21,6 +22,7 @@ interface DashboardStats {
 }
 
 export default function StudentDashboard() {
+  const { user } = useAuth();
   const { courses, isLoading, isError } = useStudentAttendance();
 
   const [isEnrolled, setIsEnrolled] = useState(false);
