@@ -25,7 +25,7 @@ export default function StudentDashboard() {
   const { user } = useAuth();
   const { courses, isLoading, isError } = useStudentAttendance();
 
-  const [isEnrolled, setIsEnrolled] = useState(false);
+  const isEnrolled = user?.isEnrolled ?? false;
 
   if (isLoading) {
     return (
@@ -112,7 +112,7 @@ export default function StudentDashboard() {
           <StatCards stacked={false} stats={stats} />
           <ChartCard />
           <div className="mt-2 flex justify-end pr-4">
-            <span className="text-[10px] font-bold tracking-widest text-[#b2b2b2] dark:text-[#8ba3c7]">
+            <span className="text-1xl font-black text-[#4ade80]">
               BIOMETRIC ENROLLED
             </span>
           </div>

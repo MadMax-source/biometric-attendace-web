@@ -11,6 +11,7 @@ export type User = {
   department: string;
   id: string;
   level: string;
+  isEnrolled?: boolean;
 };
 
 export type Student = {

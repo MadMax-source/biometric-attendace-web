@@ -7,7 +7,7 @@ import {
   useEffect,
   type ReactNode,
 } from "react";
-import { User, Role } from "./mock-data";
+import { User, Role } from "./type";
 
 type AuthContextType = {
   user: User | null;

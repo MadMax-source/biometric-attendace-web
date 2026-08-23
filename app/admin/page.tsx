@@ -8,7 +8,7 @@ import {
   Percent,
   Users,
 } from "lucide-react";
-import { courses, sessions } from "@/lib/mock-data";
+import { courses, sessions } from "@/lib/type";
 import { PageHeader, StatCard, BarRow } from "@/components/widgets";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";

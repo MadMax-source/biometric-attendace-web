@@ -13,7 +13,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
-import type { Role } from "@/lib/mock-data";
+import type { Role } from "@/lib/type";
 import { PageTransition } from "@/components/page-transition";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
