@@ -31,8 +31,8 @@ export default function AttendanceRecordsPage() {
 
   const endpoint =
     !courseFilter || courseFilter === "all"
-      ? "/attendance-records"
-      : `/attendance-records/${courseFilter}`;
+      ? "/attendanceRecords"
+      : `/attendanceRecords/${courseFilter}`;
 
   const {
     data: recordsData,

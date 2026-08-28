@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   BookOpen,
   CalendarCheck,
@@ -11,6 +10,8 @@ import {
 } from "lucide-react";
 import { useStudentAttendance } from "@/hook/useAttendance";
 import { useAuth } from "@/lib/auth-context";
+import ChartCard from "@/components/studentProfile/chartCard";
+import ActiveCourseBanner from "@/components/studentProfile/activeCourseBanner";
 interface DashboardStats {
   totalCourses: number;
   overallPercentage: number;
@@ -105,7 +106,7 @@ export default function StudentDashboard() {
           Dashboard
         </h1>
       </div>
-
+      <ActiveCourseBanner />
       {isEnrolled ? (
         // ENROLLED STATE: Cards in a row, chart below
         <div className="flex flex-col gap-6">
@@ -152,7 +153,7 @@ export default function StudentDashboard() {
               </div>
             </div>
 
-            <ChartCard />
+            <NotEnrrolChartCard />
           </div>
 
           {/* Right Column: Stacked Stats */}
@@ -166,11 +167,12 @@ export default function StudentDashboard() {
 }
 
 // Chart Component Placeholder
-function ChartCard() {
+function NotEnrrolChartCard() {
   return (
     <div className="flex min-h-[400px] w-full flex-col items-center justify-center rounded-[20px] bg-white dark:bg-[#0a1c3a] p-6 shadow-[0_24px_80px_rgba(15,23,42,0.12)] border border-[#d9e3f6] dark:border-[#1a365d]">
       <p className="text-sm font-medium text-[#b2b2b2] dark:text-[#8ba3c7]">
-        Attendance Chart Component
+        Biometric Enrollment is required to view your attendance chart. Please
+        visit the Attendice Kiosk to complete your enrollment.
       </p>
     </div>
   );
