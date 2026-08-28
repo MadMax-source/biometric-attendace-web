@@ -185,10 +185,10 @@ export default function TakeAttendancePage({
         offlineCount={offlineCount}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6">
+      <div className="justify-center">
         <ScannerRadar phase={phase} lastMarked={lastMarked} />
 
-        <SystemTerminal logs={logs} />
+        {/* <SystemTerminal logs={logs} /> */}
       </div>
     </div>
   );
