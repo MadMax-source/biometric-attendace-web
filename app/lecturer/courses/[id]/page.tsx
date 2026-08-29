@@ -8,6 +8,17 @@ import { toast } from "sonner";
 import useSWR from "swr";
 import BACKENDAPI from "@/API";
 import { CourseHeader } from "@/components/attendance-kiosk/kioskHeader";
+import { CalendarClock, MapPin, Play } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+type SessionFormState = {
+  date: string;
+  startTime: string;
+  endTime: string;
+  venue: string;
+};
 
 interface Course {
   id: string;
@@ -90,6 +101,10 @@ export default function LecturerCourseDetail({
     try {
       const response = await BACKENDAPI.post("/start-session", {
         courseId: course?.id,
+        date: form.date,
+        startTime: form.startTime,
+        endTime: form.endTime,
+        venue: form.venue,
       });
 
       if (response?.status === 200 || response?.status === 201) {
@@ -246,18 +261,6 @@ export default function LecturerCourseDetail({
     </div>
   );
 }
-
-import { CalendarClock, MapPin, Play } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-
-type SessionFormState = {
-  date: string;
-  startTime: string;
-  endTime: string;
-  venue: string;
-};
 
 export function SessionSetupForm({
   form,

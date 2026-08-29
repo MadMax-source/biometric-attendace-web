@@ -32,8 +32,7 @@ export default function ActiveCourseBanner() {
             </div>
             <div className="flex-1">
               <p className="text-sm font-bold text-green-700 dark:text-green-300">
-                {course?.course_code || "Course"} –{" "}
-                {course?.title || "Active Session"}
+                {course?.course_code} – {course?.title}
               </p>
               <p className="text-xs text-green-600 dark:text-green-400">
                 This class is currently in session. Proceed to the kiosk to mark
