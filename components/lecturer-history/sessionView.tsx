@@ -41,7 +41,9 @@ export default function SessionView({ selectedCourse }: SessionViewProps) {
   // Format Daily Table Data
   const dailyTableData = useMemo(() => {
     return semesterData.map((student) => {
-      const status = student.attendance?.[selectedDate] || "Absent";
+      const rawStatus = student.attendance?.[selectedDate] || "Absent";
+      const status =
+        rawStatus.toLowerCase() === "present" ? "Present" : "Absent";
       return {
         id: student.id,
         matric: student.matric,
