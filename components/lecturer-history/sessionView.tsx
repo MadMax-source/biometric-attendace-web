@@ -18,18 +18,22 @@ export default function SessionView({ selectedCourse }: SessionViewProps) {
   const { semesterData, isLoading, isError } =
     useAttendanceHistory(selectedCourse);
 
-  // Extract and Sort Dates Dynamically
+  // Reset selected date when course changes
+  useEffect(() => {
+    setSelectedDate("");
+  }, [selectedCourse]);
+
+  // Extract and sort dates dynamically
   const allDates = useMemo(() => {
-    return Array.from(
-      new Set(
-        semesterData.flatMap((student) =>
-          Object.keys(student.attendance || {}),
-        ),
-      ),
-    ).sort();
+    if (!semesterData || semesterData.length === 0) return [];
+    const dates = new Set<string>();
+    semesterData.forEach((student) => {
+      Object.keys(student.attendance || {}).forEach((d) => dates.add(d));
+    });
+    return Array.from(dates).sort();
   }, [semesterData]);
 
-  //  Auto-select the latest date when data loads
+  // Auto-select the latest date when data loads
   useEffect(() => {
     if (allDates.length > 0 && !allDates.includes(selectedDate)) {
       setSelectedDate(allDates[allDates.length - 1]);
@@ -38,8 +42,9 @@ export default function SessionView({ selectedCourse }: SessionViewProps) {
     }
   }, [allDates, selectedDate]);
 
-  // Format Daily Table Data
+  // Format daily table data with case-insensitive status
   const dailyTableData = useMemo(() => {
+    if (!semesterData || semesterData.length === 0) return [];
     return semesterData.map((student) => {
       const rawStatus = student.attendance?.[selectedDate] || "Absent";
       const status =
@@ -59,7 +64,7 @@ export default function SessionView({ selectedCourse }: SessionViewProps) {
   ).length;
   const absentCount = dailyTableData.length - presentCount;
 
-  // EXPORT LOGIC
+  // Export logic (unchanged)
   const handleExportSingleSessionCSV = () => {
     if (!selectedDate) return;
     const headers = ["Matric Number,Student Name,Status,Time In\n"];
@@ -80,7 +85,8 @@ export default function SessionView({ selectedCourse }: SessionViewProps) {
     const rows = semesterData.map((student) => {
       let attendedCount = 0;
       const dateStatuses = allDates.map((date) => {
-        const status = student.attendance?.[date] || "Absent";
+        const raw = student.attendance?.[date] || "Absent";
+        const status = raw.toLowerCase() === "present" ? "Present" : "Absent";
         if (status === "Present") attendedCount++;
         return status;
       });
@@ -104,6 +110,8 @@ export default function SessionView({ selectedCourse }: SessionViewProps) {
     link.click();
     document.body.removeChild(link);
   };
+
+  // --- Render logic ---
 
   if (!selectedCourse) {
     return (
@@ -130,17 +138,36 @@ export default function SessionView({ selectedCourse }: SessionViewProps) {
       </div>
     );
   }
+
   if (isError) {
     return (
       <div className="flex flex-col items-center justify-center py-20 h-full text-center">
         <XCircle className="size-10 text-rose-500 mb-4" />
         <p className="text-lg font-bold text-rose-600">Failed to load data</p>
         <p className="text-sm text-[#6b6b6b] dark:text-[#8ba3c7] mt-2">
-          The Express backend returned an error. Check your terminal!
+          The backend returned an error. Please try again.
         </p>
       </div>
     );
   }
+
+  // If there are no attendance sessions at all, show a message
+  if (allDates.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 px-4 text-center bg-white dark:bg-[#0a1c3a] rounded-2xl border border-dashed border-[#d9e3f6] dark:border-[#1a365d]">
+        <BookOpen className="size-12 text-[#b2b2b2] dark:text-[#8ba3c7] mb-4" />
+        <h3 className="text-lg font-bold text-[#0a2f66] dark:text-white">
+          No Attendance Sessions
+        </h3>
+        <p className="text-sm font-medium text-[#6b6b6b] dark:text-[#8ba3c7] mt-1 max-w-sm">
+          This course has no recorded attendance sessions yet.
+        </p>
+      </div>
+    );
+  }
+
+  // If there are students but no attendance for the selected date, still show table with all absent.
+  // But we already handle that in dailyTableData.
 
   return (
     <div className="flex flex-col gap-8">

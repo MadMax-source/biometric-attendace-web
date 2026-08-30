@@ -5,11 +5,11 @@ import {
   CheckCircle2,
   Hexagon,
   X,
-  Link as LinkIcon,
+  LinkIcon,
   ShieldCheck,
   Loader2,
   AlertCircle,
-  Database,
+  ExternalLink,
 } from "lucide-react";
 import BACKENDAPI from "@/API";
 
@@ -58,6 +58,12 @@ export function BlockchainReceiptModal({
     } finally {
       setVerifying(false);
     }
+  };
+
+  const openSolanaExplorer = () => {
+    if (!receipt.transactionHash) return;
+    const url = `https://explorer.solana.com/tx/${receipt.transactionHash}?cluster=devnet`;
+    window.open(url, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -141,23 +147,36 @@ export function BlockchainReceiptModal({
             </div>
           )}
 
-          {/* VERIFY BUTTON */}
-          <button
-            onClick={handleVerifyOnChain}
-            disabled={verifying || !receipt.transactionHash}
-            className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#0a2f66] dark:bg-[#1a4b96] py-3 text-sm font-bold text-white shadow-md hover:bg-[#0a2f66]/90 active:scale-95 transition-all disabled:opacity-50"
-          >
-            {verifying ? (
-              <>
-                <Loader2 className="size-4 animate-spin" /> Querying Solana
-                Ledger...
-              </>
-            ) : (
-              <>
-                <ShieldCheck className="size-4" /> Verify Live on Blockchain
-              </>
-            )}
-          </button>
+          {/* TWO BUTTONS: Verify + Explorer */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            {/* Primary: Verify */}
+            <button
+              onClick={handleVerifyOnChain}
+              disabled={verifying || !receipt.transactionHash}
+              className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-[#0a2f66] dark:bg-[#1a4b96] py-3 text-xs font-bold text-white shadow-md hover:bg-[#0a2f66]/90 active:scale-95 transition-all disabled:opacity-50"
+            >
+              {verifying ? (
+                <>
+                  <Loader2 className="size-4 animate-spin" /> Querying Solana
+                  Ledger...
+                </>
+              ) : (
+                <>
+                  <ShieldCheck className="size-4" /> Verify Live on Blockchain
+                </>
+              )}
+            </button>
+
+            {/* Secondary: Solana Explorer */}
+            <button
+              onClick={openSolanaExplorer}
+              disabled={!receipt.transactionHash}
+              className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-[#d9e3f6] dark:border-[#1a365d] bg-white dark:bg-[#0a1c3a] py-3 text-xs font-bold text-[#0a2f66] dark:text-white hover:bg-[#f2f2f2] dark:hover:bg-[#1a365d]/40 active:scale-95 transition-all disabled:opacity-50"
+            >
+              <ExternalLink className="size-4" />
+              View on Solana Explorer
+            </button>
+          </div>
         </div>
       </div>
     </div>
